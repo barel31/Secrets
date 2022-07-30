@@ -6,12 +6,20 @@
     <h1 class="display-3">Secrets</h1>
     <p class="secret-text">Don't keep your secrets, share them anonymously!</p>
 
+    
+    <div class="secret-list">
+      <% userSecrets.forEach((secret, i) => { %>
+        <form action="/delete/<%=i%>" method="post">
+        <p class="text-center" name="secret" placeholder="What's your secret?">
+          <%=secret%>
+            <button type="submit" class="btn btn-danger btn-sm text-light" aria-label="Close">Delete</button>
+          </p>
+        </form>
+        <% }) %>
+    </div>
     <form action="/submit" method="POST">
-
-      <div class="form-group">
-        <input type="text" class="form-control text-center" name="secret" placeholder="What's your secret?">
-      </div>
-      <button type="submit" class="btn btn-dark">Submit</button>
+      <input type="text" class="form-control text-center" name="secret" placeholder="What's your secret?">
+      <button type="submit" class="btn btn-dark button-submit">Submit</button>
     </form>
 
 

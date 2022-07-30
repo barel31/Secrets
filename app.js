@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
 	username: String,
 	googleId: String,
 	facebookId: String,
-	secret: String,
+	secrets: [],
 });
 
 userSchema.plugin(passportLocalMongoose);
@@ -70,15 +70,14 @@ passport.use(
 			callbackURL: 'http://localhost:3000/auth/google/callback',
 		},
 		(accessToken, refreshToken, profile, cb) => {
-			User.findOne({ googleId: profile.id }, (err, foundUser) => {
+			User.findOne({ googleId: profile.id }, (err, user) => {
 				if (err) console.log(err);
 
-				if (foundUser) {
-					console.log(foundUser);
-					return cb(err, foundUser);
+				if (user) {
+					return cb(err, user);
 				} else {
 					console.log('create google user.');
-					const user = new User({
+					user = new User({
 						username: profile.emails[0].value,
 						googleId: profile.id,
 					}).save((e) => {
@@ -104,7 +103,6 @@ passport.use(
 				if (err) console.log(err);
 
 				if (user) {
-					console.log(user);
 					return cb(err, user);
 				} else {
 					console.log('create facebook user.');
@@ -131,14 +129,12 @@ app.get('/', (req, res) => {
 // Google Auth
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-	console.log('redirected to /secrets by google');
 	res.redirect('/secrets');
 });
 
 // Facebook Auth
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
-	console.log('redirected to /secrets by facebook');
 	res.redirect('/secrets');
 });
 
@@ -191,52 +187,76 @@ app.route('/register')
 	});
 
 app.get('/secrets', (req, res) => {
-	User.find({ secret: { $ne: null } }, (err, foundUsers) => {
-		if (err) {
-			console.log(err);
-		} else {
-			const secrets = foundUsers.map((v) => v.secret);
-			res.render('secrets', { secrets: secrets });
-		}
+	// User.find({ secrets: { $ne: null } }, (err, foundUsers) => {
+	User.find({ 'secrets.0': { $exists: true } }, (err, foundUsers) => {
+		if (err) console.log(err);
+
+		const secretsArr = [];
+		foundUsers.map((user) => user.secrets.map((secret) => secretsArr.push(secret)));
+		res.render('secrets', { secrets: secretsArr });
 	});
 });
 
 app.get('/logout', (req, res) => {
 	req.logout((err) => {
-		if (err) {
-			console.log(err);
-		} else {
-			console.log('logged out user');
-			res.redirect('/');
-		}
+		if (err) console.log(err);
+		res.redirect('/');
 	});
 });
 
 app.route('/submit')
 	.get((req, res) => {
 		if (req.isAuthenticated()) {
-			res.render('submit');
+			User.findById(req.user?.id, (err, foundUser) => {
+				if (err) console.log(err);
+
+				if (foundUser) {
+					res.render('submit', { userSecrets: foundUser.secrets });
+				}
+			});
 		} else {
 			res.redirect('/login');
 		}
 	})
 	.post((req, res) => {
 		if (req.isAuthenticated()) {
+			const { secret } = req.body;
+			if (!secret) return res.redirect('/submit');
+
 			User.findById(req.user?.id, (err, foundUser) => {
-				if (err) {
-					console.log(err);
-				} else {
-					if (foundUser) {
-						foundUser.secret = req.body.secret;
-						foundUser.save(() => res.redirect('/secrets'));
-					} else {
-						console.log("User didn't found while trying to submiting a secret.");
+				if (err) console.log(err);
+
+				if (foundUser) {
+					foundUser.secrets.push(secret);
+					foundUser.save((e) => {
+						if (e) console.log(e);
 						res.redirect('/secrets');
-					}
+					});
+				} else {
+					console.log("User didn't found while trying to submiting a secret.");
+					res.redirect('/secrets');
 				}
 			});
-		}
+		} else res.redirect('/login');
 	});
+
+app.post('/delete/:secretIndex', (req, res) => {
+	if (req.isAuthenticated()) {
+		const { secretIndex } = req.params;
+
+		User.findById(req.user?.id, (err, foundUser) => {
+			if (err) console.log(err);
+
+			if (foundUser) {
+				foundUser.secrets.splice(secretIndex, 1);
+				foundUser.save((e) => {
+					if (e) console.log(e);
+					res.redirect('/submit');
+				});
+			}
+		});
+	} else res.send('Please login.');
+});
 
 ////////////////////////////////////////////
 // App Listen

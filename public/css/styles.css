@@ -4,8 +4,8 @@ body {
 }
 
 .centered {
-    padding-top: 200px;
-    text-align: center;
+  padding-top: 200px;
+  text-align: center;
 }
 
 .secret-text {
@@ -13,4 +13,12 @@ body {
   font-size: 2rem;
   color: #fff;
   background-color: #000;
+}
+
+.secret-list {
+
+}
+
+.button-submit {
+  margin-top: 1rem;
 }
