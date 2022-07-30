@@ -62,12 +62,14 @@ passport.deserializeUser((user, cb) => {
 ////////////////////////////////////////////
 // OAuth
 ////////////////////////////////////////////
+const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+console.log(fullUrl);
 passport.use(
 	new GoogleStrategy(
 		{
 			clientID: process.env.GOOGLE_CLIENT_ID,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-			callbackURL: 'http://localhost:3000/auth/google/callback',
+			callbackURL: fullUrl + 'http://localhost:3000/auth/google/callback',
 		},
 		(accessToken, refreshToken, profile, cb) => {
 			User.findOne({ googleId: profile.id }, (err, user) => {
