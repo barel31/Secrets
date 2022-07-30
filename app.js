@@ -3,8 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const ejs = require('ejs');
 const mongoose = require('mongoose');
-// const session = require('express-session');
-const session = require('cookie-session');
+const session = require('express-session');
+// const session = require('cookie-session');
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
@@ -200,6 +200,8 @@ app.get('/secrets', (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
+	if (!req.isAuthenticated()) return res.redirect('/');
+
 	req.logout((err) => {
 		if (err) console.log(err);
 		res.redirect('/');
