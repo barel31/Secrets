@@ -9,17 +9,19 @@
     
     <div class="secret-list">
       <% userSecrets.forEach((secret, i) => { %>
-        <form action="/delete/<%=i%>" method="post">
-        <p class="text-center" name="secret" placeholder="What's your secret?">
-          <%=secret%>
-            <button type="submit" class="btn btn-danger btn-sm text-light" aria-label="Close">Delete</button>
-          </p>
+        <form action="/delete/<%=i%>" method="post" class="input-group mb-3">
+          <input type="text" class="form-control text-center text-dark" placeholder="<%=secret%>" disabled>
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this secret?')">Delete</button>
+            </div>
+          </input>
         </form>
         <% }) %>
     </div>
+
     <form action="/submit" method="POST">
-      <input type="text" class="form-control text-center" name="secret" placeholder="What's your secret?">
-      <button type="submit" class="btn btn-dark button-submit">Submit</button>
+      <input type="text" class="form-control text-center mb-3" name="secret" placeholder="What's your secret?">
+      <button type="submit" class="btn btn-dark ">Submit</button>
     </form>
 
 
