@@ -2,11 +2,12 @@
 Don't keep your secrets, share them anonymously!
 See other people shared secrets.
 Submit yours secrets and share them to the world!
+Link - https://secrets0.herokuapp.com/
 
 # Login Methods
-Pick how you want to register to the app, by email and password or with social media like Google and Facebook.
+Register to the app by email and password or with social media like Google and Facebook.
 
-# Secure
+# Security
 The data is saved in mongo database securely with hashed and salted passwords.
 
 # Environment Variables
