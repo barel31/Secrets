@@ -1,7 +1,7 @@
 # Secrets
-See other people shared secrets!
-Submit yours and share your secret anonymously!
-
+Don't keep your secrets, share them anonymously!
+See other people shared secrets.
+Submit yours secrets and share them to the world!
 
 # Login Methods
 Pick how you want to register to the app, by email and password or with social media like Google and Facebook.
