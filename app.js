@@ -32,7 +32,7 @@ app.use(passport.session());
 ////////////////////////////////////////////
 // mongoose setup
 ////////////////////////////////////////////
-mongoose.connect('mongodb://localhost:27017/userDB');
+mongoose.connect(process.env.DATABASE_URI);
 
 const userSchema = new mongoose.Schema({
 	username: String,
