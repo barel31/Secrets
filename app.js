@@ -62,14 +62,12 @@ passport.deserializeUser((user, cb) => {
 ////////////////////////////////////////////
 // OAuth
 ////////////////////////////////////////////
-const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-console.log(fullUrl);
 passport.use(
 	new GoogleStrategy(
 		{
 			clientID: process.env.GOOGLE_CLIENT_ID,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-			callbackURL: fullUrl + 'http://localhost:3000/auth/google/callback',
+			callbackURL: process.env.WEB_URL + '/auth/google/callback',
 		},
 		(accessToken, refreshToken, profile, cb) => {
 			User.findOne({ googleId: profile.id }, (err, user) => {
@@ -78,7 +76,6 @@ passport.use(
 				if (user) {
 					return cb(err, user);
 				} else {
-					console.log('create google user.');
 					user = new User({
 						username: profile.emails[0].value,
 						googleId: profile.id,
@@ -97,7 +94,7 @@ passport.use(
 		{
 			clientID: process.env.FACEBOOK_APP_ID,
 			clientSecret: process.env.FACEBOOK_APP_SECRET,
-			callbackURL: 'http://localhost:3000/auth/facebook/callback',
+			callbackURL: process.env.WEB_URL + '/auth/facebook/callback',
 			profileFields: ['id', 'emails', 'name'],
 		},
 		(accessToken, refreshToken, profile, cb) => {
@@ -107,7 +104,6 @@ passport.use(
 				if (user) {
 					return cb(err, user);
 				} else {
-					console.log('create facebook user.');
 					user = new User({
 						username: profile.emails[0].value,
 						facebookId: profile.id,
