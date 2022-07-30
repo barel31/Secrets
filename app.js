@@ -32,7 +32,10 @@ app.use(passport.session());
 ////////////////////////////////////////////
 // mongoose setup
 ////////////////////////////////////////////
-mongoose.connect(process.env.DATABASE_URI);
+mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true }, (err) => {
+	if (err) console.log(err);
+	else console.log('Connected to database server successfully');
+});
 
 const userSchema = new mongoose.Schema({
 	username: String,
