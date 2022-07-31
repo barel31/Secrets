@@ -121,30 +121,30 @@ passport.use(
 	)
 );
 
-////////////////////////////////////////////
-// Routes
-////////////////////////////////////////////
-app.get('/', (req, res) => {
-	res.render('home');
-});
-
-// Google Auth
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
 	res.redirect('/secrets');
 });
 
-// Facebook Auth
 app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email'] }));
 app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
 	res.redirect('/secrets');
 });
 
+////////////////////////////////////////////
+// Routes
+////////////////////////////////////////////
+app.get('/', (req, res) => {
+	if (req.isAuthenticated()) res.redirect('secrets');
+	else res.render('home');
+});
+
 app.route('/login')
 	.get((req, res) => {
-		res.render('login');
+		if (req.isAuthenticated()) res.redirect('/secrets');
+		else res.render('login');
 	})
-	.post((req, res) => {
+	.post((req, res, next) => {
 		const user = new User({
 			username: req.body.username,
 			password: req.body.password,
@@ -152,9 +152,12 @@ app.route('/login')
 
 		req.login(user, (err) => {
 			if (err) {
-				console.log(err);
+				next(err);
 			} else {
-				passport.authenticate('local')(req, res, () => {
+				passport.authenticate('local', (err, user, info) => {
+					if (err) next(err);
+					if (!user) next('User or password are incorrect.');
+				})(req, res, () => {
 					res.redirect('/secrets');
 				});
 			}
@@ -163,26 +166,22 @@ app.route('/login')
 
 app.route('/register')
 	.get((req, res) => {
-		res.render('register');
+		if (req.isAuthenticated()) res.redirect('/secrets');
+		else res.render('register');
 	})
-	.post((req, res) => {
+	.post((req, res, next) => {
 		const { username, password } = req.body;
 
 		User.findOne({ username }, (err, foundUser) => {
-			if (err) {
-				console.log(err);
-			} else if (foundUser) {
-				res.redirect('/login');
-			} else {
+			if (err) next(err);
+			else if (foundUser) res.redirect('/login');
+			else {
 				User.register({ username }, password, (err, user) => {
-					if (err) {
-						console.log(err);
-						res.redirect('register');
-					} else {
-						passport.authenticate('local')(req, res, () => {
-							res.redirect('/secrets');
-						});
-					}
+					if (err) return next(err);
+
+					passport.authenticate('local')(req, res, () => {
+						res.redirect('/secrets');
+					});
 				});
 			}
 		});
@@ -191,7 +190,7 @@ app.route('/register')
 app.get('/secrets', (req, res) => {
 	// User.find({ secrets: { $ne: null } }, (err, foundUsers) => {
 	User.find({ 'secrets.0': { $exists: true } }, (err, foundUsers) => {
-		if (err) console.log(err);
+		if (err) return next(err);
 
 		const secretsArr = [];
 		foundUsers.map((user) => user.secrets.map((secret) => secretsArr.push(secret)));
@@ -200,8 +199,6 @@ app.get('/secrets', (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
-	if (!req.isAuthenticated()) return res.redirect('/');
-
 	req.logout((err) => {
 		if (err) console.log(err);
 		res.redirect('/');
@@ -209,57 +206,62 @@ app.get('/logout', (req, res) => {
 });
 
 app.route('/submit')
-	.get((req, res) => {
-		if (req.isAuthenticated()) {
-			User.findById(req.user?.id, (err, foundUser) => {
-				if (err) console.log(err);
-
-				if (foundUser) {
-					res.render('submit', { userSecrets: foundUser.secrets });
-				}
-			});
-		} else {
-			res.redirect('/login');
-		}
-	})
-	.post((req, res) => {
-		if (req.isAuthenticated()) {
-			const { secret } = req.body;
-			if (!secret) return res.redirect('/submit');
-
-			User.findById(req.user?.id, (err, foundUser) => {
-				if (err) console.log(err);
-
-				if (foundUser) {
-					foundUser.secrets.push(secret);
-					foundUser.save((e) => {
-						if (e) console.log(e);
-						res.redirect('/secrets');
-					});
-				} else {
-					console.log("User didn't found while trying to submiting a secret.");
-					res.redirect('/secrets');
-				}
-			});
-		} else res.redirect('/login');
-	});
-
-app.post('/delete/:secretIndex', (req, res) => {
-	if (req.isAuthenticated()) {
-		const { secretIndex } = req.params;
+	.get((req, res, next) => {
+		if (!req.isAuthenticated()) return next('Your are not logged in.');
 
 		User.findById(req.user?.id, (err, foundUser) => {
-			if (err) console.log(err);
+			if (err) return next(err);
 
 			if (foundUser) {
-				foundUser.secrets.splice(secretIndex, 1);
-				foundUser.save((e) => {
-					if (e) console.log(e);
-					res.redirect('/submit');
-				});
+				res.render('submit', { userSecrets: foundUser.secrets });
 			}
 		});
-	} else res.send('Please login.');
+	})
+	.post((req, res) => {
+		if (!req.isAuthenticated()) return res.redirect('/login');
+
+		const { secret } = req.body;
+		if (!secret) return res.redirect('/submit');
+
+		User.findById(req.user?.id, (err, foundUser) => {
+			if (err) return next(err);
+
+			if (foundUser) {
+				foundUser.secrets.push(secret);
+				foundUser.save((e) => {
+					if (e) return next(e);
+					res.redirect('/secrets');
+				});
+			} else {
+				next("User wasn/'t found while trying to submiting a secret.");
+				res.redirect('/secrets');
+			}
+		});
+	});
+
+app.post('/delete/:secretIndex', (req, res, next) => {
+	if (!req.isAuthenticated()) return next('You are not logged in.');
+
+	const { secretIndex } = req.params;
+
+	User.findById(req.user?.id, (err, foundUser) => {
+		if (err) return next(err);
+
+		if (foundUser) {
+			foundUser.secrets.splice(secretIndex, 1);
+			foundUser.save((e) => {
+				if (e) return next(e);
+				res.redirect('/submit');
+			});
+		}
+	});
+});
+////////////////////////////////////////////
+// MiddleWare
+////////////////////////////////////////////
+app.use((err, req, res, next) => {
+	console.error(err);
+	res.render('error', { errorMessage: err });
 });
 
 ////////////////////////////////////////////
