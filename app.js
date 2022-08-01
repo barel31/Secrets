@@ -35,7 +35,7 @@ app.use(passport.session());
 ////////////////////////////////////////////
 mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true }, (err) => {
 	if (err) console.log(err);
-	else console.log('Connected to database server successfully');
+	else console.log('Connected to database server successfully.');
 });
 
 const userSchema = new mongoose.Schema({
@@ -187,7 +187,7 @@ app.route('/register')
 		});
 	});
 
-app.get('/secrets', (req, res) => {
+app.get('/secrets', (req, res, next) => {
 	// User.find({ secrets: { $ne: null } }, (err, foundUsers) => {
 	User.find({ 'secrets.0': { $exists: true } }, (err, foundUsers) => {
 		if (err) return next(err);
@@ -217,7 +217,7 @@ app.route('/submit')
 			}
 		});
 	})
-	.post((req, res) => {
+	.post((req, res, next) => {
 		if (!req.isAuthenticated()) return res.redirect('/login');
 
 		const { secret } = req.body;
