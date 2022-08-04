@@ -24,25 +24,18 @@ function App() {
 	}, []);
 
 	const fetchData = () => {
-		console.log('fetch /auth/login/success');
 		axios(`${process.env.REACT_APP_WEB_URL}/auth/login/success`)
 			.then((res) => {
-				if (res.status === 200) {
-					setUser(res.data.success);
-					console.log(res.data);
-				} else throw new Error('authentication has been failed!');
+				if (res.status === 200) setUser(res.data.success);
+				else throw new Error('authentication has been failed!');
 			})
 			.catch((err) => console.log(err));
 
-		console.log('fetch /api/secrets');
-		console.log(`REQ: ${process.env.REACT_APP_WEB_URL}/auth/login/success`);
 		axios
 			.post(`${process.env.REACT_APP_WEB_URL}/api/secrets`)
 			.then((res) => {
-				if (res.status === 200) {
-					setSecrets(res.data.secrets);
-					console.log(res.data);
-				} else throw new Error('authentication has been failed!');
+				if (res.status === 200) setSecrets(res.data.secrets);
+				else throw new Error('authentication has been failed!');
 			})
 			.catch((err) => console.log(err));
 	};

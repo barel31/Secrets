@@ -66,8 +66,8 @@ app.use('/api', apiRoute);
 // MiddleWare
 ////////////////////////////////////////////
 
-const production = true;
-// const production = false;
+// const production = true;
+const production = false;
 
 if (production) {
 	app.use(express.static(path.join(__dirname, '/client/build/')));
