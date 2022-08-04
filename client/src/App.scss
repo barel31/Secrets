@@ -1,0 +1,22 @@
+@import '~bootstrap/scss/bootstrap';
+
+.App {
+	background-color: #e8ecef;
+
+	.HomePage {
+		margin: auto;
+		padding-top: 200px;
+
+		svg {
+			margin: auto;
+		}
+		
+		button {
+			margin: 0 0.5rem;
+		}
+
+		@media screen and (max-width: 900px) {
+			// padding: 20vh 0;
+		}
+	}
+}

@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const ejs = require('ejs');
 const mongoose = require('mongoose');
 const session = require('express-session');
 // const session = require('cookie-session');
@@ -9,15 +8,26 @@ const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
+const path = require('path');
+const cors = require('cors');
+
+//!Implement dates and secret search and sort-by
+
+const log = (str) => console.log(`${Date()}: ${str}`);
 
 ////////////////////////////////////////////
 // Express setup
 ////////////////////////////////////////////
 const app = express();
 
-app.use(express.static('public'));
-app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
+
+app.use('/static', express.static(path.join(__dirname, '../client/build/static')));
+
+app.get('*', function (req, res) {
+	res.sendFile('index.html', { root: path.join(__dirname, '../client/build/') });
+});
 
 app.use(
 	session({
@@ -34,8 +44,8 @@ app.use(passport.session());
 // mongoose setup
 ////////////////////////////////////////////
 mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true }, (err) => {
-	if (err) console.log(err);
-	else console.log('Connected to database server successfully.');
+	if (err) log(err);
+	else log('Connected to database server successfully.');
 });
 
 const userSchema = new mongoose.Schema({
@@ -75,7 +85,7 @@ passport.use(
 		},
 		(accessToken, refreshToken, profile, cb) => {
 			User.findOne({ googleId: profile.id }, (err, user) => {
-				if (err) console.log(err);
+				if (err) log(err);
 
 				if (user) {
 					return cb(err, user);
@@ -84,7 +94,7 @@ passport.use(
 						username: profile.emails[0].value,
 						googleId: profile.id,
 					}).save((e) => {
-						if (e) console.log(e);
+						if (e) log(e);
 						return cb(err, user);
 					});
 				}
@@ -103,7 +113,7 @@ passport.use(
 		},
 		(accessToken, refreshToken, profile, cb) => {
 			User.findOne({ facebookId: profile.id }, (err, user) => {
-				if (err) console.log(err);
+				if (err) log(err);
 
 				if (user) {
 					return cb(err, user);
@@ -112,7 +122,7 @@ passport.use(
 						username: profile.emails[0].value,
 						facebookId: profile.id,
 					}).save((e) => {
-						if (e) console.log(e);
+						if (e) log(e);
 						return cb(err, user);
 					});
 				}
@@ -132,37 +142,57 @@ app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRe
 });
 
 ////////////////////////////////////////////
-// Routes
+// API
 ////////////////////////////////////////////
-app.get('/', (req, res) => {
-	if (req.isAuthenticated()) res.redirect('secrets');
-	else res.render('home');
+
+app.post('/api/user', (req, res) => {
+	log('/api/user');
+	if (req.isAuthenticated) {
+		log(req.user);
+		res.json({ user: req.user });
+	} else {
+		log('not connected');
+		res.json({ user: 'not connected' });
+	}
 });
 
-app.route('/login')
-	.get((req, res) => {
-		if (req.isAuthenticated()) res.redirect('/secrets');
-		else res.render('login');
-	})
-	.post((req, res, next) => {
-		const user = new User({
-			username: req.body.username,
-			password: req.body.password,
-		});
+////////////////////////////////////////////
+// Routes
+////////////////////////////////////////////
 
-		req.login(user, (err) => {
-			if (err) {
-				next(err);
-			} else {
-				passport.authenticate('local', (err, user, info) => {
-					if (err) next(err);
-					if (!user) next('User or password are incorrect.');
-				})(req, res, () => {
-					res.redirect('/secrets');
-				});
-			}
-		});
-	});
+app.get('/express-test', (req, res) => {
+	res.json({ connected: 'yes' });
+});
+
+// app.get('/', (req, res) => {
+// 	if (req.isAuthenticated()) res.redirect('secrets');
+// 	else res.render('home');
+// });
+
+// app.route('/login')
+// 	.get((req, res) => {
+// 		if (req.isAuthenticated()) res.redirect('/secrets');
+// 		else res.render('login');
+// 	})
+// 	.post((req, res, next) => {
+// 		const user = new User({
+// 			username: req.body.username,
+// 			password: req.body.password,
+// 		});
+
+// 		req.login(user, (err) => {
+// 			if (err) {
+// 				next(err);
+// 			} else {
+// 				passport.authenticate('local', (err, user, info) => {
+// 					if (err) next(err);
+// 					if (!user) next('User or password are incorrect.');
+// 				})(req, res, () => {
+// 					res.redirect('/secrets');
+// 				});
+// 			}
+// 		});
+// 	});
 
 app.route('/register')
 	.get((req, res) => {
@@ -200,7 +230,7 @@ app.get('/secrets', (req, res, next) => {
 
 app.get('/logout', (req, res) => {
 	req.logout((err) => {
-		if (err) console.log(err);
+		if (err) log(err);
 		res.redirect('/');
 	});
 });
@@ -260,7 +290,7 @@ app.post('/delete/:secretIndex', (req, res, next) => {
 // MiddleWare
 ////////////////////////////////////////////
 app.use((err, req, res, next) => {
-	console.error(err);
+	log(err);
 	res.render('error', { errorMessage: err });
 });
 
@@ -268,5 +298,5 @@ app.use((err, req, res, next) => {
 // App Listen
 ////////////////////////////////////////////
 app.listen(process.env.PORT || '3000', () => {
-	console.log(`Server started on port ${process.env.PORT || 3000}`);
+	log(`Server started on port ${process.env.PORT || 3000}`);
 });
