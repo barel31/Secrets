@@ -1,26 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import Context from '../../Context';
 
 import './HomePage.scss';
 
 export default function HomePage() {
 	const nav = useNavigate();
-
-	const [data, setData] = useState('');
+	const { user } = useContext(Context);
 
 	useEffect(() => {
-		axios('http://localhost:3000/express-test')
-			.then((data) => setData(data.data.connected))
-			.catch((err) => console.log(err));
-	}, []);
+		if (user) nav('/secrets');
+	}, [user]);
 
 	return (
 		<div className="HomePage jumbotron centered">
 			<div className="container text-center">
 				<i className="fas fa-key fa-6x" />
-				<h1 className="display-3">Secrets {data}</h1>
+				<h1 className="display-3">Secrets</h1>
 				<p className="lead">Don't keep your secrets, share them anonymously!</p>
+				<p>user: {user}</p>
 				<hr />
 				<button type="button" onClick={() => nav('/register')} className="btn btn-light btn-lg">
 					Register

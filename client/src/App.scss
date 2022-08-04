@@ -1,11 +1,11 @@
 @import '~bootstrap/scss/bootstrap';
 
 .App {
+	margin-top: 200px;
 	background-color: #e8ecef;
 
 	.HomePage {
 		margin: auto;
-		padding-top: 200px;
 
 		svg {
 			margin: auto;
@@ -19,4 +19,16 @@
 			// padding: 20vh 0;
 		}
 	}
+}
+
+.secret-text {
+	text-align: center;
+	font-size: 2rem;
+	color: #fff;
+	background-color: #000;
+}
+
+.span-secret {
+	display: flex;
+	justify-content: space-between;
 }
