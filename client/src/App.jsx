@@ -35,6 +35,7 @@ function App() {
 			.catch((err) => console.log(err));
 
 		console.log('fetch /api/secrets');
+		console.log(`REQ: ${process.env.REACT_APP_WEB_URL}/auth/login/success`);
 		axios
 			.post(`${process.env.REACT_APP_WEB_URL}/api/secrets`)
 			.then((res) => {
