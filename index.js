@@ -70,12 +70,12 @@ app.use('/api', apiRoute);
 const production = false;
 
 if (production) {
-	app.use(express.static(path.join(__dirname, '../client/build/')));
+	app.use(express.static(path.join(__dirname, '/client/build/')));
 	console.log('production');
 } else {
-	app.use('/static', express.static(path.join(__dirname, '../client/build/static')));
+	app.use('/static', express.static(path.join(__dirname, '/client/build/static')));
 	app.get('/*', function (req, res) {
-		res.sendFile('index.html', { root: path.join(__dirname, '../client/build/') });
+		res.sendFile('index.html', { root: path.join(__dirname, '/client/build/') });
 	});
 }
 
