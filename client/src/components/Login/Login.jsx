@@ -15,7 +15,7 @@ export default function Login() {
 	}, [user]);
 
 	const google = () => {
-		window.open('http://localhost:3000/auth/google', '_self');
+		window.open(`${process.env.REACT_APP_WEB_URL}/auth/google`, '_self');
 	};
 
 	const onFormSubmit = (e) => {
@@ -23,7 +23,7 @@ export default function Login() {
 
 		console.log('fetch /auth/login');
 		axios
-			.post('http://localhost:3000/auth/login', {
+			.post(`${process.env.REACT_APP_WEB_URL}/auth/login`, {
 				username: loginRef.username.current.value,
 				password: loginRef.password.current.value,
 			})

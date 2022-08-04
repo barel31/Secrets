@@ -25,7 +25,7 @@ function App() {
 
 	const fetchData = () => {
 		console.log('fetch /auth/login/success');
-		axios('http://localhost:3000/auth/login/success')
+		axios(`${process.env.REACT_APP_WEB_URL}/auth/login/success`)
 			.then((res) => {
 				if (res.status === 200) {
 					setUser(res.data.success);
@@ -36,7 +36,7 @@ function App() {
 
 		console.log('fetch /api/secrets');
 		axios
-			.post('http://localhost:3000/api/secrets')
+			.post(`${process.env.REACT_APP_WEB_URL}/api/secrets`)
 			.then((res) => {
 				if (res.status === 200) {
 					setSecrets(res.data.secrets);

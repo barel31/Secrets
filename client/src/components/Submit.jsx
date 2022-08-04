@@ -21,7 +21,7 @@ export default function Submit() {
 			nav('/login');
 		} else {
 			axios
-				.post('http://localhost:3000/api/user/secrets')
+				.post(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`)
 				.then((res) => {
 					if (res.status === 200) {
 						setUserSecrets(res.data.secrets);
@@ -40,7 +40,7 @@ export default function Submit() {
 
 	const deleteSecret = (index) => {
 		axios
-			.post(`http://localhost:3000/api/user/delete/${index}`)
+			.post(`${process.env.REACT_APP_WEB_URL}/api/user/delete/${index}`)
 			.then((res) => {
 				if (res.status === 200) {
 					fetchData();
@@ -61,7 +61,7 @@ export default function Submit() {
 
 		const secret = secretInput.current.value;
 		axios
-			.post(`http://localhost:3000/api/user/add/${secret}`)
+			.post(`${process.env.REACT_APP_WEB_URL}/api/user/add/${secret}`)
 			.then((res) => {
 				if (res.status === 200) {
 					fetchData();

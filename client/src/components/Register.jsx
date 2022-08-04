@@ -15,7 +15,7 @@ export default function Register() {
 
 		console.log('fetch /auth/register');
 		axios
-			.post('http://localhost:3000/auth/register', {
+			.post(`${process.env.REACT_APP_WEB_URL}/auth/register`, {
 				username: registerRef.username.current.value,
 				password: registerRef.password.current.value,
 			})
