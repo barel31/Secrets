@@ -1,5 +1,8 @@
 const router = require('express').Router();
 const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+
 const User = require('../models/users');
 
 const error = (res, code, err) => res.status(code).json({ error: err });
@@ -12,7 +15,7 @@ router.get('/login/success', (req, res) => {
 			user: req.user,
 			// cookies: req.cookies,
 		});
-	} else res.json({ success: false });
+	} else res.status(200).json({ success: false });
 });
 
 router.get('/login/failed', (req, res) => {
@@ -29,7 +32,7 @@ router.get('/logout', (req, res) => {
 	});
 });
 
-const authUrlObj = { successRedirect: 'http://localhost:3000/cb/google', failureRedirect: '/login/failed' };
+const authUrlObj = { successRedirect: `${process.env.WEB_URL}/cb/google`, failureRedirect: '/login/failed' };
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get('/google/callback', passport.authenticate('google', authUrlObj));
@@ -38,22 +41,18 @@ router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }))
 router.get('/facebook/callback', passport.authenticate('facebook', authUrlObj));
 
 router.post('/login', (req, res) => {
-	console.log('user trying to login');
-	const user = new User({
-		username: req.body.username,
-		password: req.body.password,
-	});
-	console.log(user);
+	User.findOne({ username: req.body.username }, (err, user) => {
+		if (err) console.log(err);
 
-	req.login(user, (err) => {
-		if (err) return error(res, 500, err);
+		req.login(user, (err) => {
+			if (err) return error(res, 500, err);
 
-		passport.authenticate('local', (err, user, info) => {
-			if (err) error(res, 401, err);
-			if (!user) {
-				error(res, 401, 'User or password are incorrect.');
-			} else res.status(200).json({ success: true });
-		})(req, res, () => res.status(200).json({ success: true }));
+			passport.authenticate('local', (err, user, info) => {
+				if (err) error(res, 401, err);
+				else if (!user) error(res, 401, 'User or password are incorrect.');
+				else res.status(200).json({ success: true });
+			})(req, res, () => res.status(200).json({ success: true }));
+		});
 	});
 });
 
@@ -67,12 +66,8 @@ router.post('/register', (req, res) => {
 		else {
 			User.register({ username }, password, (err, user) => {
 				if (err) return error(res, 500, err);
-				// res.status(200).json({ success: true });
 
-				passport.authenticate('local')(req, res, () => {
-					// res.redirect('/secrets');
-					res.status(200).json({ success: true });
-				});
+				passport.authenticate('local')(req, res, () => res.status(200).json({ success: true }));
 			});
 		}
 	});

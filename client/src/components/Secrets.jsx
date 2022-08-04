@@ -8,7 +8,7 @@ export default function Secrets() {
 
 	const { user, secrets, fetchData, toast } = useContext(Context);
 
-	const btnHandler = () => {
+	const logInOutHandler = () => {
 		if (user) {
 			axios('http://localhost:3000/auth/logout')
 				.then((res) => {
@@ -40,11 +40,14 @@ export default function Secrets() {
 						<p className="secret-text">Loading...</p>
 					)}
 					<hr />
-					<button className="btn btn-light btn-lg" onClick={btnHandler} role="button">
+					<button className="btn btn-light btn-lg" onClick={logInOutHandler} role="button">
 						{user ? 'Log Out' : 'Login'}
 					</button>
-					<button className="btn btn-dark btn-lg" role="button" onClick={() => nav('/submit')}>
-						Submit a Secret
+					<button
+						className="btn btn-dark btn-lg"
+						role="button"
+						onClick={() => nav(user ? '/submit' : '/register')}>
+						{user ? 'Submit a Secret' : 'Register'}
 					</button>
 				</div>
 			</div>

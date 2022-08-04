@@ -3,6 +3,20 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const User = require('./models/users');
 
+passport.use(User.createStrategy());
+
+passport.serializeUser((user, cb) => {
+	process.nextTick(() => {
+		cb(null, { id: user?.id });
+	});
+});
+
+passport.deserializeUser((user, cb) => {
+	process.nextTick(() => {
+		return cb(null, user);
+	});
+});
+
 passport.use(
 	new GoogleStrategy(
 		{
@@ -57,15 +71,3 @@ passport.use(
 		}
 	)
 );
-
-passport.serializeUser((user, cb) => {
-	process.nextTick(() => {
-		cb(null, { id: user.id });
-	});
-});
-
-passport.deserializeUser((user, cb) => {
-	process.nextTick(() => {
-		return cb(null, user);
-	});
-});

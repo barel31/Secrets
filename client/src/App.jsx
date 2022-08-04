@@ -17,6 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 	const [user, setUser] = useState();
+	const [fetched, setFetched] = useState(false);
 	const [secrets, setSecrets] = useState([]);
 
 	useEffect(() => {
@@ -24,10 +25,13 @@ function App() {
 	}, []);
 
 	const fetchData = () => {
+		setFetched(false);
 		axios(`${process.env.REACT_APP_WEB_URL}/auth/login/success`)
 			.then((res) => {
-				if (res.status === 200) setUser(res.data.success);
-				else throw new Error('authentication has been failed!');
+				if (res.status === 200) {
+					setUser(res.data.success);
+					setFetched(true);
+				} else throw new Error('authentication has been failed!');
 			})
 			.catch((err) => console.log(err));
 
@@ -42,7 +46,7 @@ function App() {
 
 	return (
 		<div className="App">
-			<Context.Provider value={{ user, fetchData, secrets, toast }}>
+			<Context.Provider value={{ user, fetchData, secrets, toast, fetched }}>
 				<Routes>
 					<Route path="/" element={<HomePage />} />
 					<Route path="/login" element={<Login />} />

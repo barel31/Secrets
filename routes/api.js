@@ -14,7 +14,7 @@ router.post('/secrets', (req, res) => {
 });
 
 router.post('/user/secrets', (req, res) => {
-	if (!req.user) return error(res, 401, 'User not authorized.');
+	if (!req?.user?.id) return error(res, 401, 'User unauthorized.');
 
 	User.findById(req?.user?.id, (err, found) => {
 		if (err) return error(res, 500, err);
@@ -24,7 +24,7 @@ router.post('/user/secrets', (req, res) => {
 });
 
 router.post('/user/delete/:secretIndex', (req, res) => {
-	if (!req.user) return error(res, 401, 'User not authorized.');
+	if (!req.user.id) return error(res, 401, 'User unauthorized.');
 
 	const { secretIndex } = req.params;
 
@@ -41,41 +41,24 @@ router.post('/user/delete/:secretIndex', (req, res) => {
 	});
 });
 
-router.post('/user/add/:secret', (req, res) => {
-	const { secret } = req.params;
-
-	if (!req?.user) return error(res, 401, 'User not authorized.');
-
-	User.findById(req.user.id, (err, found) => {
-		if (err) return error(res, 500, error);
-
-		if (!secret.length) return error(res, 'Secret is empty.');
-
-		found.secrets.push(secret);
-		found.save((err) => {
-			if (err) return error(res, 400, 'Unable to save user data.');
-			res.status(200).json({ secrets: found.secrets });
-		});
-	});
-});
-
 router.post('/submit', (req, res) => {
+	console.log({ reqUser: req.user });
 	if (!req.user) return error(res, 401, 'User unauthorized');
 
 	const { secret } = req.body;
-	if (!secret) return error(res, 400, 'Providing empty secret.');
+	// if (!secret) return error(res, 400, 'Providing empty secret.');
 
-	User.findById(req.user?.id, (err, foundUser) => {
-		if (err) return error(res, 400, err);
+	User.findById(req.user.id, (err, foundUser) => {
+		// if (err) return error(res, 400, err);
 
 		if (foundUser) {
 			foundUser.secrets.push(secret);
 			foundUser.save((e) => {
-				if (e) return error(res, 400, e);
+				// if (e) return error(res, 400, e);
 				res.status(200).json({ saved: true });
 			});
 		} else {
-			error(res, 400, "User wasn/'t found while trying to submiting a secret.");
+			// error(res, 400, "User wasn/'t found while trying to submiting a secret.");
 		}
 	});
 });

@@ -11,32 +11,34 @@ export default function Submit() {
 
 	const [userSecrets, setUserSecrets] = useState([]);
 
-	const { user, toast } = useContext(Context);
+	const { user, toast, fetched } = useContext(Context);
 
 	const secretInput = useRef();
 
 	const fetchData = () => {
-		if (!user) {
-			toast.warning("You're not logged in, please login.");
-			nav('/login');
-		} else {
-			axios
-				.post(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`)
-				.then((res) => {
-					if (res.status === 200) {
-						setUserSecrets(res.data.secrets);
-					} else {
-						toast.error('ERROR: User authentication has been failed!');
-						throw new Error('authentication has been failed!');
-					}
-				})
-				.catch((err) => console.log(err));
-		}
+		axios
+			.post(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`)
+			.then((res) => {
+				if (res.status === 200) {
+					setUserSecrets(res.data.secrets);
+				} else {
+					toast.error('ERROR: User authentication has been failed!');
+					throw new Error('authentication has been failed!');
+				}
+			})
+			.catch((err) => console.log(err));
 	};
 
 	useEffect(() => {
 		fetchData();
 	}, [user]);
+
+	useEffect(() => {
+		if (fetched && !user) {
+			toast.warn("You're not logged in. Redirect to login page.");
+			nav('/login');
+		}
+	}, [fetched]);
 
 	const deleteSecret = (index) => {
 		axios
@@ -61,11 +63,11 @@ export default function Submit() {
 
 		const secret = secretInput.current.value;
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/user/add/${secret}`)
+			.post(`${process.env.REACT_APP_WEB_URL}/api/submit/`, { secret })
 			.then((res) => {
 				if (res.status === 200) {
 					fetchData();
-					toast.success(`Successfully create new secret: ${secret}`);
+					toast.success(`Successfully created new secret: ${secret}`);
 					secretInput.current.value = '';
 				} else {
 					toast.error(`Cannot add secret`);
