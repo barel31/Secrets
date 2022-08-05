@@ -1,15 +1,14 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import Context from '../Context';
 import { Button, Form, InputGroup } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 export default function Submit() {
 	const nav = useNavigate();
 
-	const [userSecrets, setUserSecrets] = useState([]);
-
-	const { user, toast, fetched } = useContext(Context);
+	const { user, setUser, fetched } = useContext(Context);
 
 	const secretInput = useRef();
 
@@ -18,7 +17,7 @@ export default function Submit() {
 			.post(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`)
 			.then((res) => {
 				if (res.status === 200) {
-					setUserSecrets(res.data.secrets);
+					setUser({ ...user, secrets: res.data.secrets });
 				} else {
 					toast.error('ERROR: User authentication has been failed!');
 					throw new Error('authentication has been failed!');
@@ -86,8 +85,8 @@ export default function Submit() {
 				<p className="secret-text">Don't keep your secrets, share them anonymously!</p>
 
 				<div className="secret-list">
-					{userSecrets.length ? (
-						userSecrets.map((secret, i) => (
+					{user?.secrets.length ? (
+						user.secrets.map((secret, i) => (
 							<InputGroup key={i} className="mb-3">
 								<Form.Control
 									placeholder={secret}

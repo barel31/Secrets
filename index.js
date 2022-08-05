@@ -12,10 +12,7 @@ require('./passport');
 const authRoute = require('./routes/auth');
 const apiRoute = require('./routes/api');
 
-//!Implement dates and secret search and sort-by
-
 const log = (str) => console.log(`${Date()}: ${str}`);
-module.exports = log;
 
 ////////////////////////////////////////////
 // Express setup

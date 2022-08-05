@@ -1,14 +1,13 @@
-import React, { useContext, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import Context from '../Context';
 
 import axios from 'axios';
 
 import './Login/Login.scss';
+import { toast } from 'react-toastify';
 
 export default function Register() {
 	const nav = useNavigate();
-	const { toast } = useContext(Context);
 
 	const onFormSubmit = (e) => {
 		e.preventDefault();
@@ -81,14 +80,14 @@ export default function Register() {
 				<div className="col-sm-3">
 					<div className="card">
 						<div className="card-body">
-							<button className="btn btn-block btn-social btn-google" onClick={google} role="button">
+							<button className="btn btn-block btn-social btn-google" onClick={google}>
 								<i className="fab fa-google"></i>
 								Sign In with Google
 							</button>
 						</div>
 
 						<div className="card-body">
-							<a className="btn btn-block btn-social btn-facebook" href="/auth/facebook" role="button">
+							<a className="btn btn-block btn-social btn-facebook" href="/auth/facebook">
 								<i className="fab fa-facebook"></i>
 								Login with Facebook
 							</a>

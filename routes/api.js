@@ -63,4 +63,16 @@ router.post('/submit', (req, res) => {
 	});
 });
 
+router.get('/username', (req, res) => {
+	if (req.user) {
+		User.findById(req.user.id, (err, found) => {
+			if (err) console.log(err);
+
+			if (found) {
+				res.status(200).json({ username: found.username });
+			} else res.status(401).json({ error: 'Unable to found user.' });
+		});
+	} else res.status(401).json({ error: 'Unable to find user.' });
+});
+
 module.exports = router;

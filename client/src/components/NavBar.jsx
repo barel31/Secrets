@@ -1,12 +1,26 @@
-import React, { useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useEffect, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import Context from '../Context';
 import { Container, Nav, Navbar } from 'react-bootstrap';
+import axios from 'axios';
 
 export default function NavBar() {
-	const nav = useNavigate();
+	const { user, fetched, setUser, logInOutHandler } = useContext(Context);
 
-	const { user, logInOutHandler } = useContext(Context);
+	const fetchUserName = () => {
+		console.log('fetch /api/username');
+		axios(`${process.env.REACT_APP_WEB_URL}/api/username`)
+			.then((res) => {
+				console.log(res.data);
+				setUser({ ...user, username: res.data.username });
+			})
+			.catch((err) => console.log(err));
+	};
+
+	useEffect(() => {
+		console.log({ user, fetched });
+		if (user && fetched) fetchUserName();
+	}, [fetched]);
 
 	return (
 		<Navbar bg="light" expand="lg">
@@ -40,10 +54,8 @@ export default function NavBar() {
 						{user ? (
 							<>
 								<Navbar.Text>
-									Signed in as: {user}
-									<Nav.Link
-										className="nav-link navbar-logout-link"
-										onClick={logInOutHandler}>
+									Signed in as: {user.username}
+									<Nav.Link className="nav-link navbar-logout-link" onClick={logInOutHandler}>
 										Logout
 									</Nav.Link>
 								</Navbar.Text>

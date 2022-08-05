@@ -3,8 +3,7 @@ import Context from '../Context';
 import { Link } from 'react-router-dom';
 
 export default function Secrets() {
-
-	const { user, secrets, fetchData, toast, logInOutHandler } = useContext(Context);
+	const { user, secrets, logInOutHandler } = useContext(Context);
 
 	return (
 		<div className="Secrets jumbotron centered">
@@ -25,7 +24,9 @@ export default function Secrets() {
 					<button className="btn btn-light btn-lg m-1" onClick={logInOutHandler}>
 						{user ? 'Log Out' : 'Login'}
 					</button>
-					<Link to={user ? '/submit' : '/register'} className="btn btn-dark btn-lg m-1">{user ? 'Submit a Secret' : 'Register'}</Link>
+					<Link to={user ? '/submit' : '/register'} className="btn btn-dark btn-lg m-1">
+						{user ? 'Submit a Secret' : 'Register'}
+					</Link>
 				</div>
 			</div>
 		</div>

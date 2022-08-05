@@ -3,7 +3,7 @@ import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Context from './Context';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-//!Implement navbar
+
 import HomePage from './components/HomePage/HomePage';
 import Login from './components/Login/Login';
 import Register from './components/Register';
@@ -21,7 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() {
 	const nav = useNavigate();
 
-	const [user, setUser] = useState('asd');
+	const [user, setUser] = useState();
 	const [fetched, setFetched] = useState(false);
 	const [secrets, setSecrets] = useState([]);
 
@@ -35,6 +35,7 @@ function App() {
 			.then((res) => {
 				if (res.status === 200) {
 					setUser(res.data.success);
+					console.log(res.data);
 					setFetched(true);
 				} else throw new Error('authentication has been failed!');
 			})
@@ -63,13 +64,11 @@ function App() {
 				})
 				.catch((err) => console.log(err));
 		} else nav('/login');
-
-		console.log('logout');
 	};
 
 	return (
 		<div className="App">
-			<Context.Provider value={{ user, fetchData, secrets, toast, fetched, logInOutHandler }}>
+			<Context.Provider value={{ user, setUser, fetchData, secrets, fetched, logInOutHandler }}>
 				<NavBar />
 				<div className="container--app">
 					<Routes>
@@ -85,7 +84,7 @@ function App() {
 					</Routes>
 				</div>
 			</Context.Provider>
-			<ToastContainer />
+			<ToastContainer position="bottom-right" newestOnTop pauseOnFocusLoss={false} />
 		</div>
 	);
 }
