@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Context from './Context';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -12,13 +12,16 @@ import Submit from './components/Submit';
 import CbGoogle from './components/CbGoogle';
 import NotFoundPage from './components/NotFoundPage';
 import NavBar from './components/NavBar';
+import Logout from './components/Logout';
 
 import './App.scss';
 import './styles/bootstrap-social.css';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-	const [user, setUser] = useState();
+	const nav = useNavigate();
+
+	const [user, setUser] = useState('asd');
 	const [fetched, setFetched] = useState(false);
 	const [secrets, setSecrets] = useState([]);
 
@@ -46,9 +49,27 @@ function App() {
 			.catch((err) => console.log(err));
 	};
 
+	const logInOutHandler = () => {
+		if (user) {
+			axios(`${process.env.REACT_APP_WEB_URL}/auth/logout`)
+				.then((res) => {
+					if (res.status === 200) {
+						if (res.data.success) {
+							fetchData();
+							nav('/');
+							toast.success('Logout successfully.');
+						} else toast.error('Cannot logout.');
+					}
+				})
+				.catch((err) => console.log(err));
+		} else nav('/login');
+
+		console.log('logout');
+	};
+
 	return (
 		<div className="App">
-			<Context.Provider value={{ user, fetchData, secrets, toast, fetched }}>
+			<Context.Provider value={{ user, fetchData, secrets, toast, fetched, logInOutHandler }}>
 				<NavBar />
 				<div className="container--app">
 					<Routes>
@@ -58,6 +79,7 @@ function App() {
 						<Route exact path="/secrets" element={<Secrets />} />
 						<Route exact path="/submit" element={<Submit />} />
 						<Route exact path="/cb/google" element={<CbGoogle />} />
+						<Route exact path="/logout" element={<Logout />} />
 						<Route path="/404" element={<NotFoundPage />} />
 						<Route path="*" element={<Navigate to="/404" replace />} />
 					</Routes>

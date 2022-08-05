@@ -1,14 +1,12 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Context from '../Context';
-import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { Container, Nav, Navbar } from 'react-bootstrap';
 
 export default function NavBar() {
 	const nav = useNavigate();
 
-	const { user, toast } = useContext(Context);
-
-	useEffect(() => {}, []);
+	const { user, logInOutHandler } = useContext(Context);
 
 	return (
 		<Navbar bg="light" expand="lg">
@@ -43,9 +41,11 @@ export default function NavBar() {
 							<>
 								<Navbar.Text>
 									Signed in as: {user}
-									<Link className="nav-link" style={{ display: 'inline' }} to={'/logout'}>
+									<Nav.Link
+										className="nav-link navbar-logout-link"
+										onClick={logInOutHandler}>
 										Logout
-									</Link>
+									</Nav.Link>
 								</Navbar.Text>
 							</>
 						) : (
@@ -54,12 +54,6 @@ export default function NavBar() {
 							</Link>
 						)}
 					</Nav>
-					{/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-							<NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-							<NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-							<NavDropdown.Divider />
-							<NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-						</NavDropdown> */}
 				</Navbar.Collapse>
 			</Container>
 		</Navbar>

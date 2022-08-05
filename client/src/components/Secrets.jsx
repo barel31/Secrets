@@ -1,28 +1,10 @@
 import React, { useContext } from 'react';
 import Context from '../Context';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 export default function Secrets() {
-	const nav = useNavigate();
 
-	const { user, secrets, fetchData, toast } = useContext(Context);
-
-	const logInOutHandler = () => {
-		if (user) {
-			axios(`${process.env.REACT_APP_WEB_URL}/auth/logout`)
-				.then((res) => {
-					if (res.status === 200) {
-						if (res.data.success) {
-							fetchData();
-							nav('/');
-							toast.success('Logout successfully.');
-						} else toast.error('Cannot logout.');
-					}
-				})
-				.catch((err) => console.log(err));
-		} else nav('/login');
-	};
+	const { user, secrets, fetchData, toast, logInOutHandler } = useContext(Context);
 
 	return (
 		<div className="Secrets jumbotron centered">
