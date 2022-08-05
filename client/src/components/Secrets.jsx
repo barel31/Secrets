@@ -10,8 +10,7 @@ export default function Secrets() {
 
 	const logInOutHandler = () => {
 		if (user) {
-			axios
-				.post(`${process.env.REACT_APP_WEB_URL}/auth/logout`)
+			axios(`${process.env.REACT_APP_WEB_URL}/auth/logout`)
 				.then((res) => {
 					if (res.status === 200) {
 						if (res.data.success) {
