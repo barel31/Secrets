@@ -2,9 +2,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Context from '../Context';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
+import { Button, Form, InputGroup } from 'react-bootstrap';
 
 export default function Submit() {
 	const nav = useNavigate();

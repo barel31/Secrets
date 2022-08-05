@@ -7,6 +7,7 @@ const session = require('express-session');
 const passport = require('passport');
 const path = require('path');
 const cors = require('cors');
+const forceSSL = require('express-force-ssl');
 
 require('./passport');
 const authRoute = require('./routes/auth');
@@ -65,6 +66,13 @@ app.use('/api', apiRoute);
 ////////////////////////////////////////////
 // MiddleWare
 ////////////////////////////////////////////
+
+app.set('forceSSLOptions', {
+	enable301Redirects: true,
+	trustXFPHeader: false,
+	httpsPort: 443,
+	sslRequiredMessage: 'SSL Required.',
+});
 
 // const production = true;
 const production = false;
