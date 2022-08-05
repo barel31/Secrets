@@ -40,13 +40,10 @@ export default function Secrets() {
 						<p className="secret-text">Loading...</p>
 					)}
 					<hr />
-					<button className="btn btn-light btn-lg" onClick={logInOutHandler} role="button">
+					<button className="btn btn-light btn-lg" onClick={logInOutHandler}>
 						{user ? 'Log Out' : 'Login'}
 					</button>
-					<button
-						className="btn btn-dark btn-lg"
-						role="button"
-						onClick={() => nav(user ? '/submit' : '/register')}>
+					<button className="btn btn-dark btn-lg" onClick={() => nav(user ? '/submit' : '/register')}>
 						{user ? 'Submit a Secret' : 'Register'}
 					</button>
 				</div>

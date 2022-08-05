@@ -48,12 +48,12 @@ function App() {
 		<div className="App">
 			<Context.Provider value={{ user, fetchData, secrets, toast, fetched }}>
 				<Routes>
-					<Route path="/" element={<HomePage />} />
-					<Route path="/login" element={<Login />} />
-					<Route path="/register" element={<Register />} />
-					<Route path="/secrets" element={<Secrets />} />
-					<Route path="/submit" element={<Submit />} />
-					<Route path="/cb/google" element={<CbGoogle />} />
+					<Route exact path="/" element={<HomePage />} />
+					<Route exact path="/login" element={<Login />} />
+					<Route exact path="/register" element={<Register />} />
+					<Route exact path="/secrets" element={<Secrets />} />
+					<Route exact path="/submit" element={<Submit />} />
+					<Route exact path="/cb/google" element={<CbGoogle />} />
 				</Routes>
 			</Context.Provider>
 			<ToastContainer />
