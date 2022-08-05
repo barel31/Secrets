@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import Context from '../Context';
 import { Button, Form, InputGroup } from 'react-bootstrap';
@@ -86,7 +86,7 @@ export default function Submit() {
 				<p className="secret-text">Don't keep your secrets, share them anonymously!</p>
 
 				<div className="secret-list">
-					{userSecrets ? (
+					{userSecrets.length ? (
 						userSecrets.map((secret, i) => (
 							<InputGroup key={i} className="mb-3">
 								<Form.Control
@@ -95,13 +95,13 @@ export default function Submit() {
 									aria-describedby={secret}
 									disabled
 								/>
-								<Button variant="btn btn-danger" id="button-addon2" onClick={deleteSecret}>
+								<Button variant="btn btn-danger" onClick={deleteSecret}>
 									Delete
 								</Button>
 							</InputGroup>
 						))
 					) : (
-						<p>You haven't submit any secret yet.</p>
+						<p className="secret-text">You haven't submit any secret yet.</p>
 					)}
 				</div>
 
@@ -114,9 +114,12 @@ export default function Submit() {
 						ref={secretInput}
 						required
 					/>
-					<button type="submit" className="btn btn-dark">
+					<button type="submit" className="btn btn-dark m-3">
 						Submit
 					</button>
+					<Link to={'/'} className="btn btn-secondary m-3">
+						Home
+					</Link>
 				</form>
 			</div>
 		</div>
