@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import Context from './Context';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -10,6 +10,7 @@ import Register from './components/Register';
 import Secrets from './components/Secrets';
 import Submit from './components/Submit';
 import CbGoogle from './components/CbGoogle';
+import NotFoundPage from './components/NotFoundPage';
 
 import './App.scss';
 import './styles/bootstrap-social.css';
@@ -54,6 +55,8 @@ function App() {
 					<Route exact path="/secrets" element={<Secrets />} />
 					<Route exact path="/submit" element={<Submit />} />
 					<Route exact path="/cb/google" element={<CbGoogle />} />
+					<Route path="/404" element={<NotFoundPage />} />
+					<Route path="*" element={<Navigate to="/404" replace />} />
 				</Routes>
 			</Context.Provider>
 			<ToastContainer />

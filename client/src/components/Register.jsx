@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Context from '../Context';
 
 import axios from 'axios';
@@ -34,12 +34,15 @@ export default function Register() {
 			.catch((err, res) => {
 				console.log(err);
 				toast.error('Cannot register user.');
-				console.log('Cannot register user.');
 			});
 	};
 
 	const registerRef = { username: useRef(), password: useRef() };
 
+	const google = () => {
+		window.open(`${process.env.REACT_APP_WEB_URL}/auth/google`, '_self');
+	};
+	
 	return (
 		<div className="Register container mt-5">
 			<h1>Register</h1>
@@ -62,9 +65,14 @@ export default function Register() {
 										required
 									/>
 								</div>
-								<button type="submit" className="btn btn-dark">
-									Register
-								</button>
+								<div className="d-flex">
+									<button type="submit" className="btn btn-dark me-auto">
+										Register
+									</button>
+									<Link to={'/'} className="btn btn-secondary">
+										Home
+									</Link>
+								</div>
 							</form>
 						</div>
 					</div>
@@ -73,10 +81,10 @@ export default function Register() {
 				<div className="col-sm-3">
 					<div className="card">
 						<div className="card-body">
-							<a className="btn btn-block btn-social btn-google" href="/auth/google" role="button">
+							<button className="btn btn-block btn-social btn-google" onClick={google} role="button">
 								<i className="fab fa-google"></i>
 								Sign In with Google
-							</a>
+							</button>
 						</div>
 
 						<div className="card-body">

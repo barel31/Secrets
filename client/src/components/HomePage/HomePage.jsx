@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Context from '../../Context';
 
 import './HomePage.scss';
@@ -21,12 +21,8 @@ export default function HomePage() {
 				<p className="lead">Don't keep your secrets, share them anonymously!</p>
 				<p>user: {user}</p>
 				<hr />
-				<button type="button" onClick={() => nav('/register')} className="btn btn-light btn-lg">
-					Register
-				</button>
-				<button type="button" onClick={() => nav('/login')} className="btn btn-dark btn-lg">
-					Login
-				</button>
+				<Link to={'/register'} className="btn btn-light btn-lg m-3">Register</Link>
+				<Link to={'/login'} className="btn btn-dark btn-lg m-3">Login</Link>
 			</div>
 		</div>
 	);

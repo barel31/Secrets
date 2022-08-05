@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Context from '../Context';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Secrets() {
@@ -43,9 +43,7 @@ export default function Secrets() {
 					<button className="btn btn-light btn-lg" onClick={logInOutHandler}>
 						{user ? 'Log Out' : 'Login'}
 					</button>
-					<button className="btn btn-dark btn-lg" onClick={() => nav(user ? '/submit' : '/register')}>
-						{user ? 'Submit a Secret' : 'Register'}
-					</button>
+					<Link to={user ? '/submit' : '/register'} className="btn btn-dark btn-lg">{user ? 'Submit a Secret' : 'Register'}</Link>
 				</div>
 			</div>
 		</div>

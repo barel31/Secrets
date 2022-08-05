@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import Context from '../../Context';
 
@@ -61,9 +61,14 @@ export default function Login() {
 									<label htmlFor="password">Password</label>
 									<input type="password" className="form-control" ref={loginRef.password} required />
 								</div>
-								<button type="submit" className="btn btn-dark">
-									Login
-								</button>
+								<div className="d-flex">
+									<button type="submit" className="btn btn-dark me-auto">
+										Login
+									</button>
+									<Link to={'/'} className="btn btn-secondary">
+										Home
+									</Link>
+								</div>
 							</form>
 						</div>
 					</div>
@@ -72,7 +77,7 @@ export default function Login() {
 				<div className="col-sm-3">
 					<div className="card">
 						<div className="card-body">
-							<button type="submit" className="btn btn-block btn-social btn-google" onClick={google}>
+							<button className="btn btn-block btn-social btn-google" onClick={google}>
 								<i className="fab fa-google"></i>
 								Sign In with Google
 							</button>
