@@ -40,10 +40,10 @@ export default function Secrets() {
 						<p className="secret-text">Loading...</p>
 					)}
 					<hr />
-					<button className="btn btn-light btn-lg" onClick={logInOutHandler}>
+					<button className="btn btn-light btn-lg m-1" onClick={logInOutHandler}>
 						{user ? 'Log Out' : 'Login'}
 					</button>
-					<Link to={user ? '/submit' : '/register'} className="btn btn-dark btn-lg">{user ? 'Submit a Secret' : 'Register'}</Link>
+					<Link to={user ? '/submit' : '/register'} className="btn btn-dark btn-lg m-1">{user ? 'Submit a Secret' : 'Register'}</Link>
 				</div>
 			</div>
 		</div>

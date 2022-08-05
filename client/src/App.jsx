@@ -3,7 +3,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import Context from './Context';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-
+//!Implement navbar
 import HomePage from './components/HomePage/HomePage';
 import Login from './components/Login/Login';
 import Register from './components/Register';
@@ -11,6 +11,7 @@ import Secrets from './components/Secrets';
 import Submit from './components/Submit';
 import CbGoogle from './components/CbGoogle';
 import NotFoundPage from './components/NotFoundPage';
+import NavBar from './components/NavBar';
 
 import './App.scss';
 import './styles/bootstrap-social.css';
@@ -48,16 +49,19 @@ function App() {
 	return (
 		<div className="App">
 			<Context.Provider value={{ user, fetchData, secrets, toast, fetched }}>
-				<Routes>
-					<Route exact path="/" element={<HomePage />} />
-					<Route exact path="/login" element={<Login />} />
-					<Route exact path="/register" element={<Register />} />
-					<Route exact path="/secrets" element={<Secrets />} />
-					<Route exact path="/submit" element={<Submit />} />
-					<Route exact path="/cb/google" element={<CbGoogle />} />
-					<Route path="/404" element={<NotFoundPage />} />
-					<Route path="*" element={<Navigate to="/404" replace />} />
-				</Routes>
+				<NavBar />
+				<div className="container--app">
+					<Routes>
+						<Route exact path="/" element={<HomePage />} />
+						<Route exact path="/login" element={<Login />} />
+						<Route exact path="/register" element={<Register />} />
+						<Route exact path="/secrets" element={<Secrets />} />
+						<Route exact path="/submit" element={<Submit />} />
+						<Route exact path="/cb/google" element={<CbGoogle />} />
+						<Route path="/404" element={<NotFoundPage />} />
+						<Route path="*" element={<Navigate to="/404" replace />} />
+					</Routes>
+				</div>
 			</Context.Provider>
 			<ToastContainer />
 		</div>
