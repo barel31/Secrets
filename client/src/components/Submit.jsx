@@ -40,9 +40,9 @@ export default function Submit() {
 		}
 	}, [fetched]);
 
-	const deleteSecret = (index) => {
+	const deleteSecret = (secretIndex) => {
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/user/delete/${index}`)
+			.post(`${process.env.REACT_APP_WEB_URL}/api/user/delete`, { secretIndex })
 			.then((res) => {
 				if (res.status === 200) {
 					fetchData();
@@ -63,7 +63,7 @@ export default function Submit() {
 
 		const secret = secretInput.current.value;
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/submit/`, { secret })
+			.post(`${process.env.REACT_APP_WEB_URL}/api/submit`, { secret })
 			.then((res) => {
 				if (res.status === 200) {
 					fetchData();

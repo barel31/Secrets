@@ -23,10 +23,10 @@ router.post('/user/secrets', (req, res) => {
 	});
 });
 
-router.post('/user/delete/:secretIndex', (req, res) => {
+router.post('/user/delete/', (req, res) => {
 	if (!req.user.id) return error(res, 401, 'User unauthorized.');
 
-	const { secretIndex } = req.params;
+	const { secretIndex } = req.body;
 
 	User.findById(req.user.id, (err, found) => {
 		if (err) return error(res, 500, error);
@@ -46,19 +46,19 @@ router.post('/submit', (req, res) => {
 	if (!req.user) return error(res, 401, 'User unauthorized');
 
 	const { secret } = req.body;
-	// if (!secret) return error(res, 400, 'Providing empty secret.');
+	if (!secret) return error(res, 400, 'Providing empty secret.');
 
 	User.findById(req.user.id, (err, foundUser) => {
-		// if (err) return error(res, 400, err);
+		if (err) return error(res, 400, err);
 
 		if (foundUser) {
 			foundUser.secrets.push(secret);
 			foundUser.save((e) => {
-				// if (e) return error(res, 400, e);
+				if (e) return error(res, 400, e);
 				res.status(200).json({ saved: true });
 			});
 		} else {
-			// error(res, 400, "User wasn/'t found while trying to submiting a secret.");
+			error(res, 400, "User wasn/'t found while trying to submiting a secret.");
 		}
 	});
 });
