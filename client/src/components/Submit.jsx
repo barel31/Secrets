@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 export default function Submit() {
 	const nav = useNavigate();
-	
+
 	const [fetchState, setFetchState] = useState({ switch: -1, button: -1 });
 	const [privateCheck, setPrivateCheck] = useState(false);
 
@@ -112,13 +112,13 @@ export default function Submit() {
 								/>
 								<InputGroup.Text>
 									{fetchState.switch === i ? (
-										<Form.Switch type="switch" checked={secret.isPrivate} disabled />
+										<Form.Switch type="switch" checked={!secret.isPrivate} disabled />
 									) : (
 										<Form.Switch
 											type="switch"
 											size={'sm'}
-											checked={secret.isPrivate}
-											onChange={(e) => changeSecretState(i, e.target.checked)}
+											checked={!secret.isPrivate}
+											onChange={(e) => changeSecretState(i, !e.target.checked)}
 										/>
 									)}
 								</InputGroup.Text>

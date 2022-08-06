@@ -34,14 +34,16 @@ function App() {
 			axios(`${process.env.REACT_APP_WEB_URL}/auth/login/success`)
 				.then((res) => {
 					setFetched(true);
-					if (res.status === 200 && res.data.success) {
-						console.log(res.data);
+					if (res.status === 200) {
+						if (res.data.success) {
+							console.log(res.data);
 
-						const user = res.data.user;
-						user.id = user._id;
-						delete user._id;
+							const user = res.data.user;
+							user.id = user._id;
+							delete user._id;
 
-						setUser(user);
+							setUser(user);
+						} else setUser();
 					} else {
 						setUser({
 							id: 'test',
@@ -51,7 +53,6 @@ function App() {
 								{ secret: 'true', isPrivate: true },
 							],
 						});
-						// setUser();
 						throw new Error('authentication has been failed!');
 					}
 				})
