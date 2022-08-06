@@ -57,7 +57,7 @@ router.post('/login', (req, res) => {
 				else if (!user) error(res, 401, 'User or password are incorrect.');
 				else res.status(200).json({ success: true });
 			})(req, res, () => res.status(200).json({ success: true }));
-		});
+		}); 
 	});
 });
 
