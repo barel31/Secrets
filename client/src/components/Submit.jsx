@@ -8,38 +8,17 @@ import { toast } from 'react-toastify';
 export default function Submit() {
 	const [fetchState, setFetchState] = useState(-1);
 
-	const { user, setUser, fetched } = useContext(Context);
+	const { user, fetchData } = useContext(Context);
 
 	const secretInput = useRef();
 	const privateCheck = useRef();
 
-	const fetchData = () => {
-		console.log('fetch /api/user/secrets');
-
-		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`)
-			.then((res) => {
-				if (res.status === 200) {
-					const secrets = res.data.secrets.map((secret) => secret.secret);
-					setUser({ ...user, secrets });
-				} else {
-					toast.error('ERROR: User authentication has been failed!');
-					throw new Error('authentication has been failed!');
-				}
-			})
-			.catch((err) => console.log(err));
-	};
-
 	useEffect(() => {
-		fetchData();
-	}, [user?.id]);
-
-	useEffect(() => {
-		if (fetched && !user?.id) {
+		if (!user?.id) {
 			toast.warn("You're not logged in. Redirect to login page.");
 			// nav('/login');
 		}
-	}, [fetched]);
+	}, []);
 
 	const deleteSecret = (secretIndex) => {
 		setFetchState(secretIndex);
@@ -49,8 +28,8 @@ export default function Submit() {
 			.then((res) => {
 				setFetchState(-1);
 				if (res.status === 200) {
-					fetchData();
 					toast.success('Secret deleted successfully!');
+					user.secrets.splice(secretIndex, 1);
 				} else {
 					toast.error('ERROR: Cannot delete secret.');
 					throw new Error('Cannot delete secret.');
@@ -103,11 +82,16 @@ export default function Submit() {
 						user.secrets?.map((secret, i) => (
 							<InputGroup key={i} className="mb-3">
 								<Form.Control
-									placeholder={secret}
-									aria-label={secret}
-									aria-describedby={secret}
+									placeholder={secret.secret}
+									aria-label={secret.secret}
+									aria-describedby={secret.secret}
 									disabled
 								/>
+								<InputGroup.Text className='' style={{ display: 'block' }}>
+									Private
+									<Form.Switch type="switch" ref={privateCheck} />
+								</InputGroup.Text>
+
 								{fetchState === i ? (
 									<Button variant="danger" disabled>
 										<Spinner
@@ -120,20 +104,16 @@ export default function Submit() {
 										<span className="visually-hidden">Loading...</span>
 									</Button>
 								) : (
-									<Button
-										variant="btn btn-danger"
-										onClick={() => {
-											deleteSecret(i);
-										}}>
+									<Button variant="btn btn-danger" onClick={() => deleteSecret(i)}>
 										Delete
 									</Button>
 								)}
 							</InputGroup>
 						))
-					) : !fetched ? (
-						<Spinner animation="border" variant="dark" />
-					) : (
+					) : user?.id ? (
 						<p className="secret-text">You didn't submit any secret yet.</p>
+					) : (
+						<Spinner animation="border" variant="dark" />
 					)}
 				</div>
 
@@ -146,7 +126,9 @@ export default function Submit() {
 						ref={secretInput}
 						required
 					/>
+
 					<Form.Switch type="switch" label="Private?" ref={privateCheck} />
+
 					{fetchState === -2 ? (
 						<Button variant="dark" disabled>
 							<Spinner as="span" animation="border" size="sm" aria-hidden="true" />
@@ -156,6 +138,7 @@ export default function Submit() {
 							Submit
 						</button>
 					)}
+
 					<Link to={'/'} className="btn btn-secondary m-3">
 						Home
 					</Link>

@@ -23,7 +23,7 @@ function App() {
 
 	const [user, setUser] = useState();
 	const [fetched, setFetched] = useState(false);
-	const [secrets, setSecrets] = useState([]);
+	const [secrets, setSecrets] = useState();
 
 	useEffect(() => {
 		fetchData();
@@ -42,7 +42,10 @@ function App() {
 
 					setUser(user);
 					setFetched(true);
-				} else throw new Error('authentication has been failed!');
+				} else {
+					setUser({ id: 'test', username: 'demo_user', secrets: [{ secret: 'test', isPrivate: false }] });
+					throw new Error('authentication has been failed!');
+				}
 			})
 			.catch((err) => console.log(err));
 
@@ -65,6 +68,9 @@ function App() {
 							nav('/');
 							toast.success('Logout successfully.');
 						} else toast.error('Cannot logout.');
+					} else {
+						toast.error('Error accured when trying to logout.');
+						throw new Error('Error accured when trying to logout.');
 					}
 				})
 				.catch((err) => console.log(err));

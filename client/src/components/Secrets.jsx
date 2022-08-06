@@ -12,12 +12,16 @@ export default function Secrets() {
 				<div className="container">
 					<i className="fas fa-key fa-6x"></i>
 					<h1 className="display-3">You've Discovered My Secret!</h1>
-					{secrets.length ? (
-						secrets.map((secret, i) => (
-							<p key={i} className="secret-text">
-								{secret}
-							</p>
-						))
+					{secrets ? (
+						secrets.length ? (
+							secrets.map((secret, i) => (
+								<p key={i} className="secret-text">
+									{secret}
+								</p>
+							))
+						) : (
+							<p className='secret-text'>No Secrets submited yet, You can be the first!</p>
+						)
 					) : (
 						<Spinner animation="border" variant="dark" />
 					)}
