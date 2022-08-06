@@ -2,17 +2,16 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Context from '../Context';
-import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Button, Form, FormCheck, InputGroup, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 export default function Submit() {
-	const [fetchState, setFetchState] = useState(-1);
+	const [fetchState, setFetchState] = useState({ switch: -1, button: -1 });
+	const [privateCheck, setPrivateCheck] = useState(false);
 
 	const { user, fetched, fetchData } = useContext(Context);
 
 	const secretInput = useRef();
-	const privateCheck = useRef();
-	const privateCheckDelete = useRef([]);
 
 	useEffect(() => {
 		if (fetched && !user?.id) {
@@ -22,12 +21,12 @@ export default function Submit() {
 	}, [fetched]);
 
 	const deleteSecret = (secretIndex) => {
-		setFetchState(secretIndex);
+		setFetchState({ ...fetchState, button: secretIndex });
 
 		axios
 			.post(`${process.env.REACT_APP_WEB_URL}/api/user/delete`, { secretIndex })
 			.then((res) => {
-				setFetchState(-1);
+				setFetchState({ switch: -1, button: -1 });
 				if (res.status === 200) {
 					toast.success('Secret deleted successfully!');
 					user.secrets.splice(secretIndex, 1);
@@ -37,22 +36,42 @@ export default function Submit() {
 				}
 			})
 			.catch((err) => {
-				setFetchState(-1);
+				setFetchState({ switch: -1, button: -1 });
 				toast.error('ERROR: Cannot delete secret.');
 				console.log(err);
 			});
 	};
 
-	const onFormSubmit = (e) => {
+	const changeSecretState = (secretIndex, isPrivate) => {
+		setFetchState({ ...fetchState, switch: secretIndex });
+
+		axios
+			.post(`${process.env.REACT_APP_WEB_URL}/api/user/change/state/`, { secretIndex, isPrivate })
+			.then((res) => {
+				setFetchState({ switch: -1, button: -1 });
+				if (res.status === 200) {
+					toast.success('Secret state updated successfully!');
+					user.secrets[secretIndex].isPrivate = isPrivate;
+				} else {
+					toast.error('ERROR: Cannot change secret state.');
+					throw new Error('Cannot change secret state.');
+				}
+			})
+			.catch((err) => {
+				setFetchState({ switch: -1, button: -1 });
+				toast.error('ERROR: Cannot change secret state.');
+				console.log(err);
+			});
+	};
+
+	const submitSecret = (e) => {
 		e.preventDefault();
 
-		setFetchState(-2);
-
+		setFetchState({ ...fetchState, button: -2 });
 		const secret = secretInput.current.value;
-		const isPrivate = privateCheck.current.value;
-		const isPrivateDelete = privateCheckDelete.current.value;
+
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/submit`, { secret, isPrivate })
+			.post(`${process.env.REACT_APP_WEB_URL}/api/submit`, { secret, isPrivate: privateCheck })
 			.then((res) => {
 				if (res.status === 200) {
 					fetchData();
@@ -63,10 +82,10 @@ export default function Submit() {
 					toast.error(`Cannot add secret`);
 					throw new Error('Cannot add secret.');
 				}
-				setFetchState(-1);
+				setFetchState({ switch: -1, button: -1 });
 			})
 			.catch((err) => {
-				setFetchState(-1);
+				setFetchState({ switch: -1, button: -1 });
 				toast.error('ERROR: Cannot submit secret.');
 				console.log(err);
 			});
@@ -89,19 +108,28 @@ export default function Submit() {
 									aria-describedby={secret.secret}
 									disabled
 								/>
-								<InputGroup.Text className='' style={{ display: 'block' }}>
-									Private
-									<Form.Switch type="switch" ref={privateCheckDelete[i]} />
+								<InputGroup.Text>
+									{fetchState.switch === i ? (
+										<Form.Switch type="switch" checked={secret.isPrivate} disabled />
+									) : (
+										<Form.Switch
+											type="switch"
+											size={'sm'}
+											checked={secret.isPrivate}
+											onChange={(e) => changeSecretState(i, e.target.checked)}
+										/>
+									)}
 								</InputGroup.Text>
 
-								{fetchState === i ? (
+								{fetchState.button === i ? (
 									<Button variant="danger" disabled>
 										<Spinner
 											as="span"
 											animation="border"
-											size="sm"
+											size="lg"
 											role="status"
 											aria-hidden="true"
+											variant=""
 										/>
 										<span className="visually-hidden">Loading...</span>
 									</Button>
@@ -119,7 +147,7 @@ export default function Submit() {
 					)}
 				</div>
 
-				<form onSubmit={onFormSubmit}>
+				<form onSubmit={submitSecret}>
 					<input
 						type="text"
 						className="form-control text-center mb-3"
@@ -129,7 +157,7 @@ export default function Submit() {
 						required
 					/>
 
-					<Form.Switch type="switch" label="Private?" ref={privateCheck} />
+					{/* <FormCheck type="switch" label="Private?" onChange={(e) => setPrivateCheck(e.target.checked)} /> */}
 
 					{fetchState === -2 ? (
 						<Button variant="dark" disabled>

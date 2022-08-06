@@ -27,27 +27,36 @@ function App() {
 
 	useEffect(() => fetchData(), []);
 
-	const fetchData = () => {
-		setFetched(false);
+	const fetchData = (secretsOnly = false) => {
+		if (!secretsOnly) {
+			setFetched(false);
 
-		axios(`${process.env.REACT_APP_WEB_URL}/auth/login/success`)
-			.then((res) => {
-				setFetched(true);
-				if (res.status === 200 && res.data.success) {
-					console.log(res.data);
+			axios(`${process.env.REACT_APP_WEB_URL}/auth/login/success`)
+				.then((res) => {
+					setFetched(true);
+					if (res.status === 200 && res.data.success) {
+						console.log(res.data);
 
-					const user = res.data.user;
-					user.id = user._id;
-					delete user._id;
+						const user = res.data.user;
+						user.id = user._id;
+						delete user._id;
 
-					setUser(user);
-				} else {
-					// setUser({ id: 'test', username: 'demo_user', secrets: [{ secret: 'test', isPrivate: false }] });
-					setUser();
-					throw new Error('authentication has been failed!');
-				}
-			})
-			.catch((err) => console.log(err));
+						setUser(user);
+					} else {
+						setUser({
+							id: 'test',
+							username: 'demo_user',
+							secrets: [
+								{ secret: 'false', isPrivate: false },
+								{ secret: 'true', isPrivate: true },
+							],
+						});
+						// setUser();
+						throw new Error('authentication has been failed!');
+					}
+				})
+				.catch((err) => console.log(err));
+		}
 
 		axios
 			.post(`${process.env.REACT_APP_WEB_URL}/api/secrets`)
@@ -95,7 +104,7 @@ function App() {
 					</Routes>
 				</div>
 			</Context.Provider>
-			<ToastContainer position="bottom-right" newestOnTop pauseOnFocusLoss={false} />
+			<ToastContainer position="bottom-right" newestOnTop pauseOnFocusLoss={false} limit={3} />
 		</div>
 	);
 }

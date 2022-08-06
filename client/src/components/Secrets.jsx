@@ -1,10 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Context from '../Context';
 import { Link } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 
 export default function Secrets() {
-	const { user, secrets, logInOutHandler } = useContext(Context);
+	const { user, secrets, logInOutHandler, fetchData } = useContext(Context);
+
+	useEffect(() => fetchData(true), []);
 
 	return (
 		<div className="Secrets jumbotron centered">
@@ -20,7 +22,7 @@ export default function Secrets() {
 								</p>
 							))
 						) : (
-							<p className='secret-text'>No Secrets submited yet, You can be the first!</p>
+							<p className="secret-text">No Secrets submited yet, You can be the first!</p>
 						)
 					) : (
 						<Spinner animation="border" variant="dark" />

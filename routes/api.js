@@ -13,7 +13,7 @@ router.post('/secrets', (req, res) => {
 		const secretsArr = [];
 		foundUsers.map((user) =>
 			user.secrets.map((secret) => {
-				if (secret.isPrivate !== 'true') secretsArr.push(secret.secret);
+				if (!secret.isPrivate) secretsArr.push(secret.secret);
 			})
 		);
 		res.json({ secrets: secretsArr });
@@ -41,6 +41,26 @@ router.post('/user/delete/', (req, res) => {
 		if (secretIndex >= found.secrets.length) return error(res, 400, 'Invalid secret index.');
 
 		found.secrets.splice(secretIndex, 1);
+
+		found.save((err) => {
+			if (err) return error(res, 400, 'Unable to save user data.');
+			res.status(200).json({ secrets: found.secrets });
+		});
+	});
+});
+
+router.post('/user/change/state', (req, res) => {
+	if (!req.user.id) return error(res, 401, 'User unauthorized.');
+
+	const { secretIndex, isPrivate } = req.body;
+
+	User.findById(req.user.id, (err, found) => {
+		if (err) return error(res, 500, error);
+
+		if (secretIndex >= found.secrets.length) return error(res, 400, 'Invalid secret index.');
+
+		found.secrets[secretIndex].isPrivate = isPrivate;
+
 		found.save((err) => {
 			if (err) return error(res, 400, 'Unable to save user data.');
 			res.status(200).json({ secrets: found.secrets });
@@ -49,18 +69,17 @@ router.post('/user/delete/', (req, res) => {
 });
 
 router.post('/submit', (req, res) => {
-	if (!req.user) return error(res, 401, 'User unauthorized');
+	if (!req.user) return error(res, 401, 'User unauthorized.');
 
-	const { secret, isPrivate } = req.body;
+	const { secret, isPrivate, secretIndex } = req.body;
 
-	if (!secret || (isPrivate !== 'true' && isPrivate !== 'false' && isPrivate !== 'on'))
-		return error(res, 400, 'Empty arguments.');
+	if (!secret || typeof isPrivate !== 'boolean') return error(res, 400, 'mismatch arguments.');
 
 	User.findById(req.user.id, (err, foundUser) => {
 		if (err) return error(res, 400, err);
 
 		if (foundUser) {
-			foundUser.secrets.push({ secret, isPrivate: isPrivate === 'true' ? true : false });
+			foundUser.secrets.push({ secret, isPrivate });
 			foundUser.save((e) => {
 				if (e) return error(res, 400, e);
 				res.status(200).json({ saved: true });

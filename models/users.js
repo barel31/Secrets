@@ -6,11 +6,16 @@ mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true }, (err) => {
 	else console.log(Date() + ': Connected to database server successfully.');
 });
 
+const secretsSchema = new mongoose.Schema({
+	secret: String,
+	isPrivate: false,
+});
+
 const userSchema = new mongoose.Schema({
 	username: String,
 	googleId: String,
 	facebookId: String,
-	secrets: [Object],
+	secrets: [secretsSchema],
 });
 
 userSchema.plugin(passportLocalMongoose);
