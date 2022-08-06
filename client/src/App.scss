@@ -15,10 +15,10 @@
 			button {
 				margin: 0 0.5rem;
 			}
+		}
 
-			@media screen and (max-width: 900px) {
-				// padding: 20vh 0;
-			}
+		@media screen and (max-width: 1200px) {
+			padding-top: 100px;
 		}
 	}
 }
@@ -36,7 +36,6 @@
 }
 
 .navbar-logout-link {
-	
 	display: block;
 	@media screen and (min-width: 992px) {
 		display: inline;

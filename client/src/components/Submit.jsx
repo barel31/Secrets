@@ -166,9 +166,9 @@ export default function Submit() {
 							<Spinner as="span" animation="border" size="sm" aria-hidden="true" />
 						</Button>
 					) : (
-						<button type="submit" className="btn btn-dark m-3">
+						<Button type="submit" variant="dark m-3">
 							Submit
-						</button>
+						</Button>
 					)}
 
 					<Link to={'/'} className="btn btn-secondary m-3">

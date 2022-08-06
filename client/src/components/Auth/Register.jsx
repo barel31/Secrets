@@ -1,24 +1,28 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-
+import { Button, Spinner } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 
-import './Login/Login.scss';
-import { toast } from 'react-toastify';
+import './Login.scss';
 
 export default function Register() {
 	const nav = useNavigate();
 
+	const [fetching, setFetching] = useState();
+
 	const onFormSubmit = (e) => {
 		e.preventDefault();
-
+		setFetching(true);
 		console.log('fetch /auth/register');
+
 		axios
 			.post(`${process.env.REACT_APP_WEB_URL}/auth/register`, {
 				username: registerRef.username.current.value,
 				password: registerRef.password.current.value,
 			})
 			.then((res) => {
+				setFetching(false);
 				if (res.status === 200) {
 					if (res.data.success) {
 						console.log('register succesfully');
@@ -31,6 +35,7 @@ export default function Register() {
 				}
 			})
 			.catch((err, res) => {
+				setFetching(false);
 				console.log(err);
 				toast.error('Cannot register user.');
 			});
@@ -41,7 +46,7 @@ export default function Register() {
 	const google = () => {
 		window.open(`${process.env.REACT_APP_WEB_URL}/auth/google`, '_self');
 	};
-	
+
 	return (
 		<div className="Register container mt-5">
 			<h1>Register</h1>
@@ -65,19 +70,32 @@ export default function Register() {
 									/>
 								</div>
 								<div className="d-flex">
-									<button type="submit" className="btn btn-dark me-auto">
-										Register
-									</button>
-									<Link to={'/'} className="btn btn-secondary">
+									{fetching ? (
+										<Button variant="dark me-auto" disabled>
+											<Spinner
+												as="span"
+												animation="border"
+												size="sm"
+												role="status"
+												aria-hidden="true"
+											/>
+											<span className="visually-hidden">Loading...</span>
+										</Button>
+									) : (
+										<Button type="submit" variant="dark me-auto">
+											Register
+										</Button>
+									)}
+									<Button as={Link} to={'/'} variant="secondary">
 										Home
-									</Link>
+									</Button>
 								</div>
 							</form>
 						</div>
 					</div>
 				</div>
 
-				<div className="col-sm-3">
+				<div className="col-sm-3 mt-5">
 					<div className="card">
 						<div className="card-body">
 							<button className="btn btn-block btn-social btn-google" onClick={google}>

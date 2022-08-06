@@ -28,9 +28,9 @@ export default function Secrets() {
 						<Spinner animation="border" variant="dark" />
 					)}
 					<hr />
-					<button className="btn btn-light btn-lg m-1" onClick={logInOutHandler}>
-						{user?.id ? 'Log Out' : 'Login'}
-					</button>
+					<Link to={user?.id ? '/logout' : '/login'} className="btn btn-dark btn-lg m-1">
+						{user?.id ? 'Logout' : 'Login'}
+					</Link>
 					<Link to={user?.id ? '/submit' : '/register'} className="btn btn-dark btn-lg m-1">
 						{user?.id ? 'Submit a Secret' : 'Register'}
 					</Link>

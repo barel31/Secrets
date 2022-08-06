@@ -1,19 +1,22 @@
-import React, { useEffect, useContext, useRef } from 'react';
+import React, { useEffect, useContext, useRef, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import Context from '../../Context';
 import { toast } from 'react-toastify';
+import { Button, Spinner } from 'react-bootstrap';
 
 import './Login.scss';
 
 export default function Login() {
 	const nav = useNavigate();
 
+	const [fetching, setFetching] = useState();
+
 	const { user, fetchData } = useContext(Context);
 
 	useEffect(() => {
 		if (user?.id) {
-			toast.warning('You already logged in.')
+			toast.warning('You already logged in. rediect you to Secrets page.');
 			nav('/secrets');
 		}
 	}, [user]);
@@ -24,14 +27,16 @@ export default function Login() {
 
 	const onFormSubmit = (e) => {
 		e.preventDefault();
-
+		setFetching(true);
 		console.log('fetch /auth/login');
+
 		axios
 			.post(`${process.env.REACT_APP_WEB_URL}/auth/login`, {
 				username: loginRef.username.current.value,
 				password: loginRef.password.current.value,
 			})
 			.then((res) => {
+				setFetching(false);
 				if (res.status === 200) {
 					if (res.data.success) {
 						fetchData();
@@ -41,6 +46,7 @@ export default function Login() {
 				}
 			})
 			.catch((err) => {
+				setFetching(false);
 				toast.error('Invalid username or password.');
 				console.log(err);
 			});
@@ -66,19 +72,32 @@ export default function Login() {
 									<input type="password" className="form-control" ref={loginRef.password} required />
 								</div>
 								<div className="d-flex">
-									<button type="submit" className="btn btn-dark me-auto">
-										Login
-									</button>
-									<Link to={'/'} className="btn btn-secondary">
+									{fetching ? (
+										<Button variant="dark me-auto" disabled>
+											<Spinner
+												as="span"
+												animation="border"
+												size="sm"
+												role="status"
+												aria-hidden="true"
+											/>
+											<span className="visually-hidden">Loading...</span>
+										</Button>
+									) : (
+										<Button type="submit" variant="dark me-auto">
+											Login
+										</Button>
+									)}
+									<Button as={Link} to={'/'} variant="secondary">
 										Home
-									</Link>
+									</Button>
 								</div>
 							</form>
 						</div>
 					</div>
 				</div>
 
-				<div className="col-sm-3">
+				<div className="col-sm-3 mt-5">
 					<div className="card">
 						<div className="card-body">
 							<button className="btn btn-block btn-social btn-google" onClick={google}>
