@@ -1,0 +1,44 @@
+@import '~bootstrap/scss/bootstrap';
+
+.App {
+	.container--app {
+		padding-top: 200px;
+		background-color: #e8ecef;
+
+		.HomePage {
+			margin: auto;
+
+			svg {
+				margin: auto;
+			}
+
+			button {
+				margin: 0 0.5rem;
+			}
+
+			@media screen and (max-width: 900px) {
+				// padding: 20vh 0;
+			}
+		}
+	}
+}
+
+.secret-text {
+	text-align: center;
+	font-size: 2rem;
+	color: #fff;
+	background-color: #000;
+}
+
+.span-secret {
+	display: flex;
+	justify-content: space-between;
+}
+
+.navbar-logout-link {
+	
+	display: block;
+	@media screen and (min-width: 992px) {
+		display: inline;
+	}
+}
