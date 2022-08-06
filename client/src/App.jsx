@@ -45,19 +45,21 @@ function App() {
 							setUser(user);
 						} else setUser();
 					} else {
-						setUser({
-							id: 'test',
-							username: 'demo_user',
-							secrets: [
-								{ secret: 'false', isPrivate: false },
-								{ secret: 'true', isPrivate: true },
-							],
-						});
-						toast.warning('Unable to fetch user info from api. loading demo_user.');
 						throw new Error('authentication has been failed!');
 					}
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => {
+					console.log(err);
+					setUser({
+						id: 'test',
+						username: 'demo_user',
+						secrets: [
+							{ secret: 'false', isPrivate: false },
+							{ secret: 'true', isPrivate: true },
+						],
+					});
+					toast.warning('Unable to fetch user info from api. loading demo_user.');
+				});
 		}
 
 		axios
