@@ -5,7 +5,7 @@ import Context from '../Context';
 export default function Logout() {
 	const nav = useNavigate();
 
-	const { logInOutHandler } = useContext(Context);
+	const { logInOutHandler, user } = useContext(Context);
 
 	useEffect(() => {
 		logInOutHandler();

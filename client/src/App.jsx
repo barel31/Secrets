@@ -25,14 +25,14 @@ function App() {
 	const [fetched, setFetched] = useState(false);
 	const [secrets, setSecrets] = useState();
 
-	useEffect(() => {
-		fetchData();
-	}, []);
+	useEffect(() => fetchData(), []);
 
 	const fetchData = () => {
 		setFetched(false);
+
 		axios(`${process.env.REACT_APP_WEB_URL}/auth/login/success`)
 			.then((res) => {
+				setFetched(true);
 				if (res.status === 200 && res.data.success) {
 					console.log(res.data);
 
@@ -41,9 +41,9 @@ function App() {
 					delete user._id;
 
 					setUser(user);
-					setFetched(true);
 				} else {
 					// setUser({ id: 'test', username: 'demo_user', secrets: [{ secret: 'test', isPrivate: false }] });
+					setUser();
 					throw new Error('authentication has been failed!');
 				}
 			})
@@ -59,7 +59,7 @@ function App() {
 	};
 
 	const logInOutHandler = () => {
-		if (user) {
+		if (user?.id) {
 			axios(`${process.env.REACT_APP_WEB_URL}/auth/logout`)
 				.then((res) => {
 					if (res.status === 200) {

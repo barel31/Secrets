@@ -8,18 +8,18 @@ import { toast } from 'react-toastify';
 export default function Submit() {
 	const [fetchState, setFetchState] = useState(-1);
 
-	const { user, fetchData } = useContext(Context);
+	const { user, fetched, fetchData } = useContext(Context);
 
 	const secretInput = useRef();
 	const privateCheck = useRef();
 	const privateCheckDelete = useRef([]);
 
 	useEffect(() => {
-		if (!user?.id) {
+		if (fetched && !user?.id) {
 			toast.warn("You're not logged in. Redirect to login page.");
 			// nav('/login');
 		}
-	}, []);
+	}, [fetched]);
 
 	const deleteSecret = (secretIndex) => {
 		setFetchState(secretIndex);

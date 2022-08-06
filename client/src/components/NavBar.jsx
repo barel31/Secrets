@@ -4,7 +4,7 @@ import Context from '../Context';
 import { Container, Nav, Navbar, Spinner } from 'react-bootstrap';
 
 export default function NavBar() {
-	const { user, logInOutHandler } = useContext(Context);
+	const { user } = useContext(Context);
 
 	return (
 		<Navbar bg="light" expand="lg">
@@ -43,12 +43,12 @@ export default function NavBar() {
 								) : (
 									<Spinner animation="border" variant="dark" size="sm" />
 								)}
-								<Nav.Link className="nav-link navbar-logout-link" onClick={logInOutHandler}>
+								<Link className="nav-link navbar-logout-link" to={'/logout'}>
 									Logout
-								</Nav.Link>
+								</Link>
 							</Navbar.Text>
 						) : (
-							<Link className="nav-link" to={'/login'}>
+							<Link className="nav-link navbar-login-link" to={'/login'}>
 								Login
 							</Link>
 						)}
