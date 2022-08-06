@@ -48,9 +48,14 @@ export default function NavBar() {
 								</Link>
 							</Navbar.Text>
 						) : (
-							<Link className="nav-link navbar-login-link" to={'/login'}>
-								Login
-							</Link>
+							<>
+								<Link className="nav-link navbar-login-link" to={'/login'}>
+									Login
+								</Link>
+								<Link className="nav-link navbar-login-link" to={'/register'}>
+									Register
+								</Link>
+							</>
 						)}
 					</Nav>
 				</Navbar.Collapse>

@@ -2,13 +2,14 @@ import React, { useEffect, useContext, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import Context from '../../Context';
+import { toast } from 'react-toastify';
 
 import './Login.scss';
 
 export default function Login() {
 	const nav = useNavigate();
 
-	const { user, fetchData, toast } = useContext(Context);
+	const { user, fetchData } = useContext(Context);
 
 	useEffect(() => {
 		if (user?.id) {
