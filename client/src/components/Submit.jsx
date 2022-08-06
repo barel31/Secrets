@@ -6,7 +6,7 @@ import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 export default function Submit() {
-	const [fetchDelete, setFetchDelete] = useState(-1);
+	const [fetchState, setFetchState] = useState(-1);
 
 	const { user, setUser, fetched } = useContext(Context);
 
@@ -15,12 +15,12 @@ export default function Submit() {
 
 	const fetchData = () => {
 		console.log('fetch /api/user/secrets');
-		
+
 		axios
 			.post(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`)
 			.then((res) => {
 				if (res.status === 200) {
-					const secrets = res.data.secrets.map(secret => secret.secret);
+					const secrets = res.data.secrets.map((secret) => secret.secret);
 					console.log(secrets);
 
 					setUser({ ...user, secrets });
@@ -34,7 +34,7 @@ export default function Submit() {
 
 	useEffect(() => {
 		fetchData();
-	}, [user]);
+	}, [user?.id]);
 
 	useEffect(() => {
 		if (fetched && !user) {
@@ -44,12 +44,12 @@ export default function Submit() {
 	}, [fetched]);
 
 	const deleteSecret = (secretIndex) => {
-		setFetchDelete(secretIndex);
+		setFetchState(secretIndex);
 
 		axios
 			.post(`${process.env.REACT_APP_WEB_URL}/api/user/delete`, { secretIndex })
 			.then((res) => {
-				setFetchDelete(-1);
+				setFetchState(-1);
 				if (res.status === 200) {
 					fetchData();
 					toast.success('Secret deleted successfully!');
@@ -59,7 +59,7 @@ export default function Submit() {
 				}
 			})
 			.catch((err) => {
-				setFetchDelete(-1);
+				setFetchState(-1);
 				toast.error('ERROR: Cannot delete secret.');
 				console.log(err);
 			});
@@ -68,11 +68,14 @@ export default function Submit() {
 	const onFormSubmit = (e) => {
 		e.preventDefault();
 
+		setFetchState(-2);
+		
 		const secret = secretInput.current.value;
 		const isPrivate = privateCheck.current.value;
 		axios
 			.post(`${process.env.REACT_APP_WEB_URL}/api/submit`, { secret, isPrivate })
 			.then((res) => {
+				setFetchState(-1);
 				if (res.status === 200) {
 					fetchData();
 					toast.success(`Successfully created new secret: ${secret}`);
@@ -84,6 +87,7 @@ export default function Submit() {
 				}
 			})
 			.catch((err) => {
+				setFetchState(-1);
 				toast.error('ERROR: Cannot submit secret.');
 				console.log(err);
 			});
@@ -106,7 +110,7 @@ export default function Submit() {
 									aria-describedby={secret}
 									disabled
 								/>
-								{fetchDelete === i ? (
+								{fetchState === i ? (
 									<Button variant="danger" disabled>
 										<Spinner
 											as="span"
@@ -145,9 +149,22 @@ export default function Submit() {
 						required
 					/>
 					<Form.Switch type="switch" label="Private?" ref={privateCheck} />
-					<button type="submit" className="btn btn-dark m-3">
-						Submit
-					</button>
+					{fetchState === -2 ? (
+						<Button variant="dark" disabled>
+						<Spinner
+							as="span"
+							animation="border"
+							size="sm"
+							role="status"
+							aria-hidden="true"
+						/>
+						<span className="visually-hidden">Loading...</span>
+					</Button>
+					) : (
+						<button type="submit" className="btn btn-dark m-3">
+							Submit
+						</button>
+					)}
 					<Link to={'/'} className="btn btn-secondary m-3">
 						Home
 					</Link>

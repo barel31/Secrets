@@ -50,7 +50,7 @@ router.post('/user/delete/', (req, res) => {
 });
 
 router.post('/submit', (req, res) => {
-	// if (!req.user) return error(res, 401, 'User unauthorized');
+	if (!req.user) return error(res, 401, 'User unauthorized');
 
 	const { secret, isPrivate } = req.body;
 
@@ -61,7 +61,7 @@ router.post('/submit', (req, res) => {
 		if (err) return error(res, 400, err);
 
 		if (foundUser) {
-			foundUser.secrets.push({ secret, isPrivate });
+			foundUser.secrets.push({ secret, isPrivate: isPrivate === 'true' ? true : false });
 			foundUser.save((e) => {
 				if (e) return error(res, 400, e);
 				res.status(200).json({ saved: true });
