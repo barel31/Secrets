@@ -43,7 +43,7 @@ function App() {
 					setUser(user);
 					setFetched(true);
 				} else {
-					setUser({ id: 'test', username: 'demo_user', secrets: [{ secret: 'test', isPrivate: false }] });
+					// setUser({ id: 'test', username: 'demo_user', secrets: [{ secret: 'test', isPrivate: false }] });
 					throw new Error('authentication has been failed!');
 				}
 			})
