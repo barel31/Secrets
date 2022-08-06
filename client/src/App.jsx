@@ -53,6 +53,7 @@ function App() {
 								{ secret: 'true', isPrivate: true },
 							],
 						});
+						toast.warning('Unable to fetch user info from api. loading demo_user.');
 						throw new Error('authentication has been failed!');
 					}
 				})
