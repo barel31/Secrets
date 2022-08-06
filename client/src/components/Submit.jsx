@@ -12,6 +12,7 @@ export default function Submit() {
 
 	const secretInput = useRef();
 	const privateCheck = useRef();
+	const privateCheckDelete = useRef([]);
 
 	useEffect(() => {
 		if (!user?.id) {
@@ -49,6 +50,7 @@ export default function Submit() {
 
 		const secret = secretInput.current.value;
 		const isPrivate = privateCheck.current.value;
+		const isPrivateDelete = privateCheckDelete.current.value;
 		axios
 			.post(`${process.env.REACT_APP_WEB_URL}/api/submit`, { secret, isPrivate })
 			.then((res) => {
@@ -89,7 +91,7 @@ export default function Submit() {
 								/>
 								<InputGroup.Text className='' style={{ display: 'block' }}>
 									Private
-									<Form.Switch type="switch" ref={privateCheck} />
+									<Form.Switch type="switch" ref={privateCheckDelete[i]} />
 								</InputGroup.Text>
 
 								{fetchState === i ? (
