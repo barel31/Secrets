@@ -21,8 +21,6 @@ export default function Submit() {
 			.then((res) => {
 				if (res.status === 200) {
 					const secrets = res.data.secrets.map((secret) => secret.secret);
-					console.log(secrets);
-
 					setUser({ ...user, secrets });
 				} else {
 					toast.error('ERROR: User authentication has been failed!');
@@ -37,7 +35,7 @@ export default function Submit() {
 	}, [user?.id]);
 
 	useEffect(() => {
-		if (fetched && !user) {
+		if (fetched && !user?.id) {
 			toast.warn("You're not logged in. Redirect to login page.");
 			// nav('/login');
 		}
@@ -69,13 +67,12 @@ export default function Submit() {
 		e.preventDefault();
 
 		setFetchState(-2);
-		
+
 		const secret = secretInput.current.value;
 		const isPrivate = privateCheck.current.value;
 		axios
 			.post(`${process.env.REACT_APP_WEB_URL}/api/submit`, { secret, isPrivate })
 			.then((res) => {
-				setFetchState(-1);
 				if (res.status === 200) {
 					fetchData();
 					toast.success(`Successfully created new secret: ${secret}`);
@@ -85,6 +82,7 @@ export default function Submit() {
 					toast.error(`Cannot add secret`);
 					throw new Error('Cannot add secret.');
 				}
+				setFetchState(-1);
 			})
 			.catch((err) => {
 				setFetchState(-1);
@@ -151,15 +149,8 @@ export default function Submit() {
 					<Form.Switch type="switch" label="Private?" ref={privateCheck} />
 					{fetchState === -2 ? (
 						<Button variant="dark" disabled>
-						<Spinner
-							as="span"
-							animation="border"
-							size="sm"
-							role="status"
-							aria-hidden="true"
-						/>
-						<span className="visually-hidden">Loading...</span>
-					</Button>
+							<Spinner as="span" animation="border" size="sm" aria-hidden="true" />
+						</Button>
 					) : (
 						<button type="submit" className="btn btn-dark m-3">
 							Submit

@@ -1,23 +1,10 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Context from '../Context';
 import { Container, Nav, Navbar, Spinner } from 'react-bootstrap';
-import axios from 'axios';
 
 export default function NavBar() {
-	const { user, fetched, setUser, logInOutHandler } = useContext(Context);
-
-	const fetchUserName = () => {
-		console.log('fetch /api/username');
-
-		axios(`${process.env.REACT_APP_WEB_URL}/api/username`)
-			.then((res) => setUser({ ...user, username: res.data.username }))
-			.catch((err) => console.log(err));
-	};
-
-	useEffect(() => {
-		if (user && fetched) fetchUserName();
-	}, [fetched]);
+	const { user, logInOutHandler } = useContext(Context);
 
 	return (
 		<Navbar bg="light" expand="lg">
@@ -37,7 +24,7 @@ export default function NavBar() {
 						<Link className="nav-link" to={'/secrets'}>
 							Secrets
 						</Link>
-						{user && (
+						{user?.id && (
 							<>
 								<Nav>
 									<Link className="nav-link" to={'/submit'}>
@@ -48,7 +35,7 @@ export default function NavBar() {
 						)}
 					</Nav>
 					<Nav>
-						{user ? (
+						{user?.id ? (
 							<Navbar.Text>
 								Signed in as:{' '}
 								{user.username ? (

@@ -10,7 +10,7 @@ export default function HomePage() {
 	const { user } = useContext(Context);
 
 	useEffect(() => {
-		if (user) nav('/secrets');
+		if (user?.id) nav('/secrets');
 	}, [user]);
 
 	return (

@@ -33,9 +33,14 @@ function App() {
 		setFetched(false);
 		axios(`${process.env.REACT_APP_WEB_URL}/auth/login/success`)
 			.then((res) => {
-				if (res.status === 200) {
-					setUser(res.data.success);
+				if (res.status === 200 && res.data.success) {
 					console.log(res.data);
+
+					const user = res.data.user;
+					user.id = user._id;
+					delete user._id;
+
+					setUser(user);
 					setFetched(true);
 				} else throw new Error('authentication has been failed!');
 			})

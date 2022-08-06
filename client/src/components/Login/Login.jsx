@@ -11,7 +11,10 @@ export default function Login() {
 	const { user, fetchData, toast } = useContext(Context);
 
 	useEffect(() => {
-		if (user) nav('/secrets');
+		if (user?.id) {
+			toast.warning('You already logged in.')
+			nav('/secrets');
+		}
 	}, [user]);
 
 	const google = () => {

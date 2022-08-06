@@ -16,7 +16,6 @@ router.post('/secrets', (req, res) => {
 				if (secret.isPrivate !== 'true') secretsArr.push(secret.secret);
 			})
 		);
-		console.log(secretsArr);
 		res.json({ secrets: secretsArr });
 	});
 });
@@ -75,7 +74,7 @@ router.post('/submit', (req, res) => {
 router.get('/username', (req, res) => {
 	if (req.user) {
 		User.findById(req.user.id, (err, found) => {
-			if (err) console.log(err);
+			if (err) error(res, 500, err);
 
 			if (found) {
 				res.status(200).json({ username: found.username });
