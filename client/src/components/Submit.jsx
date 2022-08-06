@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Context from '../Context';
-import { Button, Form, FormCheck, InputGroup, Spinner } from 'react-bootstrap';
+import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 export default function Submit() {
+	const nav = useNavigate();
+	
 	const [fetchState, setFetchState] = useState({ switch: -1, button: -1 });
 	const [privateCheck, setPrivateCheck] = useState(false);
 
@@ -16,7 +18,7 @@ export default function Submit() {
 	useEffect(() => {
 		if (fetched && !user?.id) {
 			toast.warn("You're not logged in. Redirect to login page.");
-			// nav('/login');
+			nav('/login');
 		}
 	}, [fetched]);
 
