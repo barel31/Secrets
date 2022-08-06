@@ -161,7 +161,7 @@ export default function Submit() {
 
 					{/* <FormCheck type="switch" label="Private?" onChange={(e) => setPrivateCheck(e.target.checked)} /> */}
 
-					{fetchState === -2 ? (
+					{fetchState.button === -2 ? (
 						<Button variant="dark" disabled>
 							<Spinner as="span" animation="border" size="sm" aria-hidden="true" />
 						</Button>
