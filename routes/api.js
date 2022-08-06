@@ -1,14 +1,22 @@
 const router = require('express').Router();
 const User = require('../models/users');
 
-const error = (res, code, err) => res.status(code).json({ error: err });
+const error = (res, code, err) => {
+	console.log(`${Date()}: ${code} - ${err}`);
+	res.status(code).json({ error: err });
+};
 
 router.post('/secrets', (req, res) => {
 	User.find({ 'secrets.0': { $exists: true } }, (err, foundUsers) => {
 		if (err) return error(res, 401, err);
 
 		const secretsArr = [];
-		foundUsers.map((user) => user.secrets.map((secret) => secretsArr.push(secret)));
+		foundUsers.map((user) =>
+			user.secrets.map((secret) => {
+				if (secret.isPrivate !== 'true') secretsArr.push(secret.secret);
+			})
+		);
+		console.log(secretsArr);
 		res.json({ secrets: secretsArr });
 	});
 });
@@ -42,17 +50,18 @@ router.post('/user/delete/', (req, res) => {
 });
 
 router.post('/submit', (req, res) => {
-	console.log({ reqUser: req.user });
-	if (!req.user) return error(res, 401, 'User unauthorized');
+	// if (!req.user) return error(res, 401, 'User unauthorized');
 
-	const { secret } = req.body;
-	if (!secret) return error(res, 400, 'Providing empty secret.');
+	const { secret, isPrivate } = req.body;
+
+	if (!secret || (isPrivate !== 'true' && isPrivate !== 'false' && isPrivate !== 'on'))
+		return error(res, 400, 'Empty arguments.');
 
 	User.findById(req.user.id, (err, foundUser) => {
 		if (err) return error(res, 400, err);
 
 		if (foundUser) {
-			foundUser.secrets.push(secret);
+			foundUser.secrets.push({ secret, isPrivate });
 			foundUser.save((e) => {
 				if (e) return error(res, 400, e);
 				res.status(200).json({ saved: true });
