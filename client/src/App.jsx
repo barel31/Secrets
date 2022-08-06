@@ -5,14 +5,14 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
 import HomePage from './components/HomePage/HomePage';
-import Login from './components/Login/Login';
-import Register from './components/Register';
+import Login from './components/Auth/Login';
+import Logout from './components/Auth/Logout';
+import Register from './components/Auth/Register';
 import Secrets from './components/Secrets';
 import Submit from './components/Submit';
 import CbGoogle from './components/CbGoogle';
 import NotFoundPage from './components/NotFoundPage';
 import NavBar from './components/NavBar';
-import Logout from './components/Logout';
 
 import './App.scss';
 import './styles/bootstrap-social.css';

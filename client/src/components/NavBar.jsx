@@ -7,30 +7,28 @@ export default function NavBar() {
 	const { user } = useContext(Context);
 
 	return (
-		<Navbar bg="light" expand="lg">
+		<Navbar bg="light" expand="lg" collapseOnSelect sticky="top">
 			<Container>
 				<Navbar.Brand>
-					<Link to={'/'} className="nav-link">
+					<Nav.Link as={Link} to="/">
 						Secrets
-					</Link>
+					</Nav.Link>
 				</Navbar.Brand>
 				<Navbar.Toggle aria-controls="basic-navbar-nav d-flex" />
 				<Navbar.Collapse>
 					<Nav className="me-auto">
-						<Link className="nav-link" to={'/'}>
+						<Nav.Link as={Link} to="/" className="nav-link" eventKey="1">
 							Home
-						</Link>
-
-						<Link className="nav-link" to={'/secrets'}>
+						</Nav.Link>
+						<Nav.Link as={Link} to="/secrets" className="nav-link" eventKey="2">
 							Secrets
-						</Link>
+						</Nav.Link>
+
 						{user?.id && (
 							<>
-								<Nav>
-									<Link className="nav-link" to={'/submit'}>
-										Submit
-									</Link>
-								</Nav>
+								<Nav.Link as={Link} to="/submit" className="nav-link" eventKey="2">
+									Submit
+								</Nav.Link>
 							</>
 						)}
 					</Nav>
@@ -43,18 +41,18 @@ export default function NavBar() {
 								) : (
 									<Spinner animation="border" variant="dark" size="sm" />
 								)}
-								<Link className="nav-link navbar-logout-link" to={'/logout'}>
+								<Nav.Link as={Link} to="/logout" className="nav-link" eventKey="4">
 									Logout
-								</Link>
+								</Nav.Link>
 							</Navbar.Text>
 						) : (
 							<>
-								<Link className="nav-link navbar-login-link" to={'/login'}>
+								<Nav.Link as={Link} to="/login" className="nav-link" eventKey="5">
 									Login
-								</Link>
-								<Link className="nav-link navbar-login-link" to={'/register'}>
+								</Nav.Link>
+								<Nav.Link as={Link} to="/register" className="nav-link" eventKey="6">
 									Register
-								</Link>
+								</Nav.Link>
 							</>
 						)}
 					</Nav>
