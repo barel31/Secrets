@@ -109,7 +109,15 @@ function App() {
 					</Routes>
 				</div>
 			</Context.Provider>
-			<ToastContainer position="bottom-right" newestOnTop pauseOnFocusLoss={false} limit={3} />
+			<ToastContainer
+				position="bottom-right"
+				newestOnTop
+				draggable
+				closeOnClick
+				hideProgressBar={false}
+				pauseOnFocusLoss={false}
+				limit={3}
+			/>
 		</div>
 	);
 }

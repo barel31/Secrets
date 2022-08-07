@@ -59,9 +59,7 @@ router.post('/login', (req, res) => {
 	User.findOne({ username: req.body.username }, (err, user) => {
 		if (err) error(res, 500, err);
 
-		if (!user) {
-			return error(res, 400, 'No user found.');
-		}
+		if (!user) return error(res, 400, 'No user found.');
 
 		req.login(user, (err) => {
 			if (err) return error(res, 500, err);

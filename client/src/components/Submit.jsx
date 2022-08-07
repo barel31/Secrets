@@ -24,8 +24,8 @@ export default function Submit() {
 
 	const deleteSecret = (secretIndex) => {
 		setFetchState({ ...fetchState, button: secretIndex });
-
 		const toastId = toast.loading('Deleting secret...');
+		
 		axios
 			.delete(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex })
 			.then((res) => {

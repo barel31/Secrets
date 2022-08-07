@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 
 export default function Secrets() {
-	const { user, secrets, logInOutHandler, fetchData } = useContext(Context);
+	const { user, secrets, fetchData } = useContext(Context);
 
 	useEffect(() => fetchData(true), []);
 
