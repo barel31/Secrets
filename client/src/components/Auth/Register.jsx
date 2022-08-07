@@ -14,6 +14,8 @@ export default function Register() {
 	const onFormSubmit = (e) => {
 		e.preventDefault();
 		setFetching(true);
+
+		const toastId = toast.loading('Registering...');
 		console.log('fetch /auth/register');
 
 		axios
@@ -25,11 +27,20 @@ export default function Register() {
 				setFetching(false);
 				if (res.status === 200) {
 					if (res.data.success) {
-						console.log('register succesfully');
-						toast.success('You have been registered successfully!');
+						console.log('Registered successfully');
+						toast.update(toastId, {
+							render: 'You have been registered successfully!',
+							type: 'success',
+							isLoading: false,
+						});
 						nav('/secrets');
 					} else {
-						toast.error('Username already exists, redirect to login page.');
+						toast.update(toastId, {
+							render: 'Username already exists, redirect to login page.',
+							type: 'error',
+							isLoading: false,
+						});
+
 						nav('/login');
 					}
 				}
@@ -37,7 +48,7 @@ export default function Register() {
 			.catch((err, res) => {
 				setFetching(false);
 				console.log(err);
-				toast.error('Cannot register user.');
+				toast.update(toastId, { render: 'Cannot register user.', type: 'error', isLoading: false });
 			});
 	};
 

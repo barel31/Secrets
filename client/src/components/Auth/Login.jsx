@@ -28,6 +28,8 @@ export default function Login() {
 	const onFormSubmit = (e) => {
 		e.preventDefault();
 		setFetching(true);
+
+		const toastId = toast.loading('Login...');
 		console.log('fetch /auth/login');
 
 		axios
@@ -40,14 +42,14 @@ export default function Login() {
 				if (res.status === 200) {
 					if (res.data.success) {
 						fetchData();
-						toast.success('Successfully logged in.');
+						toast.update(toastId, { render: 'Successfully logged in.', type: 'success', isLoading: false });
 						nav('/secrets');
-					} else toast.error('Cannot login.');
+					} else toast.update(toastId, { render: 'Cannot login.', type: 'error', isLoading: false });
 				}
 			})
 			.catch((err) => {
 				setFetching(false);
-				toast.error('Invalid username or password.');
+				toast.update(toastId, { render: 'Invalid username or password.', type: 'error', isLoading: false });
 				console.log(err);
 			});
 	};
