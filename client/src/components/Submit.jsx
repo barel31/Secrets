@@ -26,7 +26,7 @@ export default function Submit() {
 		setFetchState({ ...fetchState, button: secretIndex });
 
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/user/delete`, { secretIndex })
+			.delete(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex })
 			.then((res) => {
 				setFetchState({ switch: -1, button: -1 });
 				if (res.status === 200) {
@@ -48,7 +48,7 @@ export default function Submit() {
 		setFetchState({ ...fetchState, switch: secretIndex });
 
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/user/change/state/`, { secretIndex, isPrivate })
+			.patch(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex, isPrivate })
 			.then((res) => {
 				setFetchState({ switch: -1, button: -1 });
 				if (res.status === 200) {
@@ -73,7 +73,7 @@ export default function Submit() {
 		const secret = secretInput.current.value;
 
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/submit`, { secret, isPrivate: privateCheck })
+			.post(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secret, isPrivate: privateCheck })
 			.then((res) => {
 				if (res.status === 200) {
 					fetchData();

@@ -63,10 +63,10 @@ function App() {
 		}
 
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/secrets`)
+			.get(`${process.env.REACT_APP_WEB_URL}/api/secrets`)
 			.then((res) => {
 				if (res.status === 200) setSecrets(res.data.secrets);
-				else throw new Error('authentication has been failed!');
+				else throw new Error('Secrets fields request has been failed.');
 			})
 			.catch((err) => console.log(err));
 	};
