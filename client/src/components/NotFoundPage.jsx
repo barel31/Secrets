@@ -1,19 +1,17 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 export default function NotFoundPage() {
-	useEffect(() => {
-		toast.error('Page not found');
-	}, []);
-
 	return (
 		<div className="Secrets jumbotron centered">
 			<div className="jumbotron text-center">
 				<div className="container">
+					<i className="fas fa-key fa-6x" />
 					<h1 className="display-1">Page not found</h1>
-					<a href="/" className="btn btn-dark m-3">
+					<Link to="/" className="btn btn-dark m-3">
 						HOME
-					</a>
+					</Link>
 				</div>
 			</div>
 		</div>

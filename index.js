@@ -38,6 +38,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+if (process.env.NODE_ENV === 'production') {
+	app.use((req, res, next) => {
+		if (req.header('x-forwarded-proto') !== 'https') res.redirect(`https://${req.header('host')}${req.url}`);
+		else next();
+	});
+}
+
 // OAuth Routes
 app.use('/auth', authRoute);
 
@@ -47,7 +54,7 @@ app.use('/api', apiRoute);
 // const production = true;
 const production = false;
 
-if (production) {
+if (process.env.NODE_ENV === 'production') {
 	app.use(express.static(path.join(__dirname, '/client/build/')));
 	console.log('production');
 } else {
