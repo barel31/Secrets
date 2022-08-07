@@ -10,7 +10,7 @@ import Logout from './components/Auth/Logout';
 import Register from './components/Auth/Register';
 import Secrets from './components/Secrets';
 import Submit from './components/Submit';
-import CbGoogle from './components/CbGoogle';
+import CallBack from './components/CallBack';
 import NotFoundPage from './components/NotFoundPage';
 import NavBar from './components/NavBar';
 
@@ -34,6 +34,7 @@ function App() {
 			axios(`${process.env.REACT_APP_WEB_URL}/auth/login/success`)
 				.then((res) => {
 					setFetched(true);
+
 					if (res.status === 200) {
 						if (res.data.success) {
 							console.log(res.data);
@@ -44,9 +45,7 @@ function App() {
 
 							setUser(user);
 						} else setUser();
-					} else {
-						throw new Error('authentication has been failed!');
-					}
+					} else throw new Error('authentication has been failed!');
 				})
 				.catch((err) => {
 					console.log(err);
@@ -101,7 +100,9 @@ function App() {
 						<Route exact path="/register" element={<Register />} />
 						<Route exact path="/secrets" element={<Secrets />} />
 						<Route exact path="/submit" element={<Submit />} />
-						<Route exact path="/cb/google" element={<CbGoogle />} />
+						<Route exact path="/callback/google/success" element={<CallBack />} />
+						<Route exact path="/callback/facebook/success" element={<CallBack />} />
+						<Route exact path="/callback/login/failed" element={<CallBack />} />
 						<Route exact path="/logout" element={<Logout />} />
 						<Route path="/404" element={<NotFoundPage />} />
 						<Route path="*" element={<Navigate to="/404" replace />} />
