@@ -42,7 +42,7 @@ router.get(
 	'/callback/google',
 	passport.authenticate('google', {
 		successRedirect: `${process.env.WEB_URL}/callback/google/success`,
-		failureRedirect: '/login/failed',
+		failureRedirect: `${process.env.WEB_URL}callback/login/failed`,
 	})
 );
 
@@ -51,7 +51,7 @@ router.get(
 	'/callback/facebook',
 	passport.authenticate('facebook', {
 		successRedirect: `${process.env.WEB_URL}/callback/facebook/success`,
-		failureRedirect: '/callback/login/failed',
+		failureRedirect: `${process.env.WEB_URL}/callback/login/failed`,
 	})
 );
 
