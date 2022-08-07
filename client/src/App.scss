@@ -35,9 +35,12 @@
 	justify-content: space-between;
 }
 
-.navbar-logout-link {
-	display: block;
-	@media screen and (min-width: 992px) {
+.Navbar {
+	.nav-link-logout {
 		display: inline;
+
+		@media screen and (max-width: 992px) {
+			display: block;
+		}
 	}
 }

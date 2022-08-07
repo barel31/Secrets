@@ -7,7 +7,7 @@ export default function NavBar() {
 	const { user } = useContext(Context);
 
 	return (
-		<Navbar bg="light" expand="lg" collapseOnSelect sticky="top">
+		<Navbar bg="light" expand="lg" collapseOnSelect sticky="top" className="Navbar">
 			<Container>
 				<Navbar.Brand>
 					<Nav.Link as={Link} to="/">
@@ -41,12 +41,7 @@ export default function NavBar() {
 								) : (
 									<Spinner animation="border" variant="dark" size="sm" />
 								)}
-								<Nav.Link
-									as={Link}
-									to="/logout"
-									className="nav-link"
-									eventKey="4"
-									style={{ display: 'inline' }}>
+								<Nav.Link as={Link} to="/logout" className="nav-link nav-link-logout" eventKey="4">
 									Logout
 								</Nav.Link>
 							</Navbar.Text>
