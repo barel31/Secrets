@@ -26,7 +26,7 @@ export default function Submit() {
 		setFetchState({ ...fetchState, button: secretIndex });
 
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/user/delete`, { secretIndex })
+			.delete(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex })
 			.then((res) => {
 				setFetchState({ switch: -1, button: -1 });
 				if (res.status === 200) {
@@ -48,7 +48,7 @@ export default function Submit() {
 		setFetchState({ ...fetchState, switch: secretIndex });
 
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/user/change/state/`, { secretIndex, isPrivate })
+			.patch(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex, isPrivate })
 			.then((res) => {
 				setFetchState({ switch: -1, button: -1 });
 				if (res.status === 200) {
@@ -73,7 +73,7 @@ export default function Submit() {
 		const secret = secretInput.current.value;
 
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/submit`, { secret, isPrivate: privateCheck })
+			.post(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secret, isPrivate: privateCheck })
 			.then((res) => {
 				if (res.status === 200) {
 					fetchData();
@@ -161,7 +161,7 @@ export default function Submit() {
 
 					{/* <FormCheck type="switch" label="Private?" onChange={(e) => setPrivateCheck(e.target.checked)} /> */}
 
-					{fetchState === -2 ? (
+					{fetchState.button === -2 ? (
 						<Button variant="dark" disabled>
 							<Spinner as="span" animation="border" size="sm" aria-hidden="true" />
 						</Button>

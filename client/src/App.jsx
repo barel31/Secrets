@@ -45,26 +45,28 @@ function App() {
 							setUser(user);
 						} else setUser();
 					} else {
-						setUser({
-							id: 'test',
-							username: 'demo_user',
-							secrets: [
-								{ secret: 'false', isPrivate: false },
-								{ secret: 'true', isPrivate: true },
-							],
-						});
-						toast.warning('Unable to fetch user info from api. loading demo_user.');
 						throw new Error('authentication has been failed!');
 					}
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => {
+					console.log(err);
+					setUser({
+						id: 'test',
+						username: 'demo_user',
+						secrets: [
+							{ secret: 'false', isPrivate: false },
+							{ secret: 'true', isPrivate: true },
+						],
+					});
+					toast.warning('Unable to fetch user info from api. loading demo_user.');
+				});
 		}
 
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/secrets`)
+			.get(`${process.env.REACT_APP_WEB_URL}/api/secrets`)
 			.then((res) => {
 				if (res.status === 200) setSecrets(res.data.secrets);
-				else throw new Error('authentication has been failed!');
+				else throw new Error('Secrets fields request has been failed.');
 			})
 			.catch((err) => console.log(err));
 	};

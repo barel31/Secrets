@@ -41,7 +41,12 @@ export default function NavBar() {
 								) : (
 									<Spinner animation="border" variant="dark" size="sm" />
 								)}
-								<Nav.Link as={Link} to="/logout" className="nav-link" eventKey="4">
+								<Nav.Link
+									as={Link}
+									to="/logout"
+									className="nav-link"
+									eventKey="4"
+									style={{ display: 'inline' }}>
 									Logout
 								</Nav.Link>
 							</Navbar.Text>

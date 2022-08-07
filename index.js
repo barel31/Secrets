@@ -12,11 +12,6 @@ require('./passport');
 const authRoute = require('./routes/auth');
 const apiRoute = require('./routes/api');
 
-const log = (str) => console.log(`${Date()}: ${str}`);
-
-////////////////////////////////////////////
-// Express setup
-////////////////////////////////////////////
 const app = express();
 
 app.use(express.json());
@@ -43,25 +38,11 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-////////////////////////////////////////////
-// mongoose setup
-////////////////////////////////////////////
-////////////////////////////////////////////
-// Passport
-////////////////////////////////////////////
-////////////////////////////////////////////
-// Routes
-////////////////////////////////////////////
-
 // OAuth Routes
 app.use('/auth', authRoute);
 
 // API
 app.use('/api', apiRoute);
-
-////////////////////////////////////////////
-// MiddleWare
-////////////////////////////////////////////
 
 // const production = true;
 const production = false;
@@ -76,10 +57,6 @@ if (production) {
 	});
 }
 
-////////////////////////////////////////////
-// App Listen
-////////////////////////////////////////////
-
 app.listen(process.env.PORT || '3000', () => {
-	log(`Server started on port ${process.env.PORT || 3000}`);
+	console.log(`${Date()}: Server started on port ${process.env.PORT || 3000}`);
 });
