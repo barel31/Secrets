@@ -51,18 +51,10 @@ app.use('/auth', authRoute);
 // API
 app.use('/api', apiRoute);
 
-// const production = true;
-const production = false;
-
-if (process.env.NODE_ENV === 'production') {
-	app.use(express.static(path.join(__dirname, '/client/build/')));
-	console.log('production');
-} else {
-	app.use('/static', express.static(path.join(__dirname, '/client/build/static')));
-	app.get('/*', function (req, res) {
-		res.sendFile('index.html', { root: path.join(__dirname, '/client/build/') });
-	});
-}
+app.use('/static', express.static(path.join(__dirname, '/client/build/static')));
+app.get('/*', (req, res) => {
+	res.sendFile('index.html', { root: path.join(__dirname, '/client/build/') });
+});
 
 app.listen(process.env.PORT || '3000', () => {
 	console.log(`${Date()}: Server started on port ${process.env.PORT || 3000}`);
