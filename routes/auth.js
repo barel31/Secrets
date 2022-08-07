@@ -41,7 +41,7 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 router.get(
 	'/callback/google',
 	passport.authenticate('google', {
-		successRedirect: `${process.env.WEB_URL}/auth/google/success`,
+		successRedirect: `${process.env.WEB_URL}/callback/google/success`,
 		failureRedirect: '/login/failed',
 	})
 );
@@ -50,7 +50,7 @@ router.get('/facebook', passport.authenticate('facebook', { scope: ['email'] }))
 router.get(
 	'/callback/facebook',
 	passport.authenticate('facebook', {
-		successRedirect: `${process.env.WEB_URL}/auth/facebook/success`,
+		successRedirect: `${process.env.WEB_URL}/callback/facebook/success`,
 		failureRedirect: '/callback/login/failed',
 	})
 );
