@@ -39,7 +39,7 @@ router.get('/logout', (req, res) => {
 
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get(
-	'/callback/google',
+	'/google/callback',
 	passport.authenticate('google', {
 		successRedirect: `${process.env.WEB_URL}/callback/google/success`,
 		failureRedirect: `${process.env.WEB_URL}callback/login/failed`,
