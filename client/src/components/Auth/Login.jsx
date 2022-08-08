@@ -12,7 +12,7 @@ export default function Login() {
 
 	const [fetching, setFetching] = useState();
 
-	const { user, fetchData } = useContext(Context);
+	const { user, fetchData, toastUpdate } = useContext(Context);
 
 	useEffect(() => {
 		if (user?.id) {
@@ -42,14 +42,14 @@ export default function Login() {
 				if (res.status === 200) {
 					if (res.data.success) {
 						fetchData();
-						toast.update(toastId, { render: 'Successfully logged in.', type: 'success', isLoading: false });
+						toastUpdate(toastId, 'success', 'Successfully logged in.');
 						nav('/secrets');
-					} else toast.update(toastId, { render: 'Cannot login.', type: 'error', isLoading: false });
+					} else toastUpdate(toastId, 'error', 'Cannot login.');
 				}
 			})
 			.catch((err) => {
 				setFetching(false);
-				toast.update(toastId, { render: 'Invalid username or password.', type: 'error', isLoading: false });
+				toastUpdate(toastId, 'success', 'Invalid username or password.');
 				console.log(err);
 			});
 	};

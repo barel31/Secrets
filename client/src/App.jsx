@@ -18,6 +18,15 @@ import './App.scss';
 import './styles/bootstrap-social.css';
 import 'react-toastify/dist/ReactToastify.css';
 
+const toastUpdate = (id, type, str) =>
+	toast.update(id, {
+		render: str,
+		type: type,
+		isLoading: false,
+		autoClose: 5000,
+		closeOnClick: 'true',
+	});
+
 function App() {
 	const nav = useNavigate();
 
@@ -91,7 +100,7 @@ function App() {
 
 	return (
 		<div className="App">
-			<Context.Provider value={{ user, setUser, fetchData, secrets, fetched, logInOutHandler }}>
+			<Context.Provider value={{ user, setUser, fetchData, secrets, fetched, logInOutHandler, toastUpdate }}>
 				<NavBar />
 				<div className="container--app">
 					<Routes>
@@ -109,15 +118,7 @@ function App() {
 					</Routes>
 				</div>
 			</Context.Provider>
-			<ToastContainer
-				position="bottom-right"
-				newestOnTop
-				draggable
-				closeOnClick
-				hideProgressBar={false}
-				pauseOnFocusLoss={false}
-				limit={3}
-			/>
+			<ToastContainer position="bottom-right" newestOnTop pauseOnFocusLoss={false} limit={3} />
 		</div>
 	);
 }

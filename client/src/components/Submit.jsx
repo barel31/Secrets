@@ -11,7 +11,7 @@ export default function Submit() {
 	const [fetchState, setFetchState] = useState({ switch: -1, button: -1 });
 	const [privateCheck, setPrivateCheck] = useState(false);
 
-	const { user, fetched, fetchData } = useContext(Context);
+	const { user, fetched, fetchData, toastUpdate } = useContext(Context);
 
 	const secretInput = useRef();
 
@@ -24,27 +24,23 @@ export default function Submit() {
 
 	const deleteSecret = (secretIndex) => {
 		setFetchState({ ...fetchState, button: secretIndex });
+
 		const toastId = toast.loading('Deleting secret...');
-		
 		axios
 			.delete(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex })
 			.then((res) => {
 				setFetchState({ switch: -1, button: -1 });
 				if (res.status === 200) {
-					toast.update(toastId, {
-						render: 'Secret deleted successfully!',
-						type: 'success',
-						isLoading: false,
-					});
+					toastUpdate(toastId, 'success', 'Secret deleted successfully!');
 					user.secrets.splice(secretIndex, 1);
 				} else {
-					toast.update(toastId, { render: 'ERROR: Cannot delete secret.', type: 'error', isLoading: false });
+					toastUpdate(toastId, 'error', 'ERROR: Cannot delete secret.');
 					throw new Error('Cannot delete secret.');
 				}
 			})
 			.catch((err) => {
 				setFetchState({ switch: -1, button: -1 });
-				toast.update(toastId, { render: 'ERROR: Cannot delete secret.', type: 'error', isLoading: false });
+				toastUpdate(toastId, 'error', 'ERROR: Cannot delete secret.');
 				console.log(err);
 			});
 	};
@@ -57,30 +53,18 @@ export default function Submit() {
 			.patch(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex, isPrivate })
 			.then((res) => {
 				setFetchState({ switch: -1, button: -1 });
-				
+
 				if (res.status === 200) {
-					toast.update(toastId, {
-						render: 'Secret state updated successfully!',
-						type: 'success',
-						isLoading: false,
-					});
+					toastUpdate(toastId, 'success', 'Secret state updated successfully!');
 					user.secrets[secretIndex].isPrivate = isPrivate;
 				} else {
-					toast.update(toastId, {
-						render: 'ERROR: Cannot change secret state.',
-						type: 'error',
-						isLoading: false,
-					});
+					toastUpdate(toastId, 'error', 'ERROR: Cannot change secret state.');
 					throw new Error('Cannot change secret state.');
 				}
 			})
 			.catch((err) => {
 				setFetchState({ switch: -1, button: -1 });
-				toast.update(toastId, {
-					render: 'ERROR: Cannot change secret state.',
-					type: 'error',
-					isLoading: false,
-				});
+				toastUpdate(toastId, 'error', 'ERROR: Cannot change secret state.');
 				console.log(err);
 			});
 	};
@@ -100,22 +84,18 @@ export default function Submit() {
 
 				if (res.status === 200) {
 					fetchData();
-					toast.update(toastId, {
-						render: `Successfully created new secret: ${secret}`,
-						type: 'success',
-						isLoading: false,
-					});
+					toastUpdate(toastId, 'success', `Successfully created new secret: ${secret}`);
 					console.log(res.data);
 					secretInput.current.value = '';
 				} else {
-					toast.update(toastId, { render: 'ERROR: Cannot add secret.', type: 'error', isLoading: false });
+					toastUpdate(toastId, 'error', 'ERROR: Cannot add secret.');
+
 					throw new Error('Cannot add secret.');
 				}
 			})
 			.catch((err) => {
 				setFetchState({ switch: -1, button: -1 });
-				toast.update(toastId, { render: 'ERROR: Cannot add secret.', type: 'error', isLoading: false });
-
+				toastUpdate(toastId, 'error', 'ERROR: Cannot add secret.');
 				console.log(err);
 			});
 	};

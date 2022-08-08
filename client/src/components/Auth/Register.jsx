@@ -1,12 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import Context from '../../Context';
 
 import './Login.scss';
 
 export default function Register() {
+	const { toastUpdate } = useContext(Context);
+
 	const nav = useNavigate();
 
 	const [fetching, setFetching] = useState();
@@ -28,18 +31,10 @@ export default function Register() {
 				if (res.status === 200) {
 					if (res.data.success) {
 						console.log('Registered successfully');
-						toast.update(toastId, {
-							render: 'You have been registered successfully!',
-							type: 'success',
-							isLoading: false,
-						});
+						toastUpdate(toastId, 'success', 'You have been registered successfully!');
 						nav('/secrets');
 					} else {
-						toast.update(toastId, {
-							render: 'Username already exists, redirect to login page.',
-							type: 'error',
-							isLoading: false,
-						});
+						toastUpdate(toastId, 'error', 'Username already exists, redirect to login page.');
 
 						nav('/login');
 					}
