@@ -104,20 +104,22 @@ function App() {
 		<div className="App">
 			<Context.Provider value={{ user, setUser, fetchData, secrets, fetched, logInOutHandler, toastUpdate }}>
 				<NavBar />
-				<div className="container--app">
-					<Routes>
-						<Route exact path="/" element={<HomePage />} />
-						<Route exact path="/login" element={<Login />} />
-						<Route exact path="/register" element={<Register />} />
-						<Route exact path="/secrets" element={<Secrets />} />
-						<Route exact path="/submit" element={<Submit />} />
-						<Route exact path="/callback/google/success" element={<CallBack />} />
-						<Route exact path="/callback/facebook/success" element={<CallBack />} />
-						<Route exact path="/callback/login/failed" element={<CallBack />} />
-						<Route exact path="/logout" element={<Logout />} />
-						<Route path="/404" element={<NotFoundPage />} />
-						<Route path="*" element={<Navigate to="/404" replace />} />
-					</Routes>
+				<div className="app-container">
+					<div className="app-inner-container">
+						<Routes>
+							<Route exact path="/" element={<HomePage />} />
+							<Route exact path="/login" element={<Login />} />
+							<Route exact path="/register" element={<Register />} />
+							<Route exact path="/secrets" element={<Secrets />} />
+							<Route exact path="/submit" element={<Submit />} />
+							<Route exact path="/callback/google/success" element={<CallBack />} />
+							<Route exact path="/callback/facebook/success" element={<CallBack />} />
+							<Route exact path="/callback/login/failed" element={<CallBack />} />
+							<Route exact path="/logout" element={<Logout />} />
+							<Route path="/404" element={<NotFoundPage />} />
+							<Route path="*" element={<Navigate to="/404" replace />} />
+						</Routes>
+					</div>
 					<Footer />
 				</div>
 			</Context.Provider>
