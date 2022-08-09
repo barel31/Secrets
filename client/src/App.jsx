@@ -13,6 +13,7 @@ import Submit from './components/Submit';
 import CallBack from './components/CallBack';
 import NotFoundPage from './components/NotFoundPage';
 import NavBar from './components/NavBar';
+import Footer from './components/Footer';
 
 import './App.scss';
 import './styles/bootstrap-social.css';
@@ -28,16 +29,28 @@ const toastUpdate = (id, type, str) =>
 	});
 
 function App() {
+	const isLocal3001 = window.location.href.includes('localhost:3001');
+
 	const nav = useNavigate();
 
 	const [user, setUser] = useState();
-	const [fetched, setFetched] = useState(false);
+	const [fetched, setFetched] = useState(isLocal3001);
 	const [secrets, setSecrets] = useState();
 
 	useEffect(() => fetchData(), []);
 
 	const fetchData = (secretsOnly = false) => {
 		if (!secretsOnly) {
+			if (isLocal3001) {
+				return setUser({
+					id: 'test',
+					username: 'demo_user',
+					secrets: [
+						{ secret: 'false', isPrivate: false, date: '2022-08-09T16:51:06.871Z' },
+						{ secret: 'true', isPrivate: true, date: '2022-08-09T16:51:04.664Z' },
+					],
+				});
+			}
 			setFetched(false);
 
 			axios(`${process.env.REACT_APP_WEB_URL}/auth/login/success`)
@@ -56,18 +69,7 @@ function App() {
 						} else setUser();
 					} else throw new Error('authentication has been failed!');
 				})
-				.catch((err) => {
-					console.log(err);
-					setUser({
-						id: 'test',
-						username: 'demo_user',
-						secrets: [
-							{ secret: 'false', isPrivate: false },
-							{ secret: 'true', isPrivate: true },
-						],
-					});
-					toast.warning('Unable to fetch user info from api. loading demo_user.');
-				});
+				.catch((err) => console.log(err));
 		}
 
 		axios
@@ -116,6 +118,7 @@ function App() {
 						<Route path="/404" element={<NotFoundPage />} />
 						<Route path="*" element={<Navigate to="/404" replace />} />
 					</Routes>
+					<Footer />
 				</div>
 			</Context.Provider>
 			<ToastContainer position="bottom-right" newestOnTop pauseOnFocusLoss={false} limit={3} />

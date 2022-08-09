@@ -1,4 +1,4 @@
-@import '~bootstrap/scss/bootstrap';
+// @import '~bootstrap/scss/bootstrap';
 
 .App {
 	.container--app {
@@ -42,5 +42,14 @@
 		@media screen and (max-width: 992px) {
 			display: block;
 		}
+	}
+}
+
+.Footer {
+	footer {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		text-align: center;
 	}
 }

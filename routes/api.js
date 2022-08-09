@@ -70,7 +70,7 @@ router
 	.post((req, res) => {
 		if (!req.user) return error(res, 401, 'User unauthorized.');
 
-		const { secret, isPrivate, secretIndex } = req.body;
+		const { secret, isPrivate } = req.body;
 
 		if (!secret || typeof isPrivate !== 'boolean') return error(res, 400, 'mismatch arguments.');
 

@@ -9,7 +9,7 @@ mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true }, (err) => {
 const secretsSchema = new mongoose.Schema({
 	secret: String,
 	isPrivate: Boolean,
-	time: { type: Date, default: Date.now },
+	date: { type: Date, default: Date.now },
 });
 
 const userSchema = new mongoose.Schema({

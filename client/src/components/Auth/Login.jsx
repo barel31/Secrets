@@ -27,8 +27,8 @@ export default function Login() {
 
 	const onFormSubmit = (e) => {
 		e.preventDefault();
-		setFetching(true);
 
+		setFetching(true);
 		const toastId = toast.loading('Login...');
 		console.log('fetch /auth/login');
 

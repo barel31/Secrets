@@ -4,6 +4,7 @@ import axios from 'axios';
 import Context from '../Context';
 import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import date from 'date-and-time';
 
 export default function Submit() {
 	const nav = useNavigate();
@@ -105,12 +106,13 @@ export default function Submit() {
 			<div className="jumbotron centered">
 				<i className="fas fa-key fa-6x"></i>
 				<h1 className="display-3">Secrets</h1>
-				<p className="secret-text">Don't keep your secrets, share them anonymously!</p>
+				<p className="secret-text">Your Secrets:</p>
 
 				<div className="secret-list">
 					{user?.secrets?.length ? (
 						user.secrets?.map((secret, i) => (
 							<InputGroup key={i} className="mb-3">
+								<InputGroup.Text>{date.format(new Date(secret.date), 'DD/M/YY H:m')}</InputGroup.Text>
 								<Form.Control
 									placeholder={secret.secret}
 									aria-label={secret.secret}
