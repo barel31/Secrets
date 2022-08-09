@@ -24,6 +24,8 @@ export default function Submit() {
 	}, [fetched]);
 
 	const deleteSecret = (secretIndex) => {
+		if (!window.confirm('Are you sure you want delete your secret?')) return;
+
 		setFetchState({ ...fetchState, button: secretIndex });
 
 		const toastId = toast.loading('Deleting secret...');
@@ -112,7 +114,7 @@ export default function Submit() {
 					{user?.secrets?.length ? (
 						user.secrets?.map((secret, i) => (
 							<InputGroup key={i} className="mb-3">
-								<InputGroup.Text>{date.format(new Date(secret.date), 'DD/M/YY H:m')}</InputGroup.Text>
+								<InputGroup.Text>{date.format(new Date(secret.date), 'DD/M/YY HH:mm')}</InputGroup.Text>
 								<Form.Control
 									placeholder={secret.secret}
 									aria-label={secret.secret}
