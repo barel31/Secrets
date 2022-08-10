@@ -34,8 +34,8 @@ export default function Secrets() {
 					<i className="fas fa-key fa-6x"></i>
 					<h1 className="display-3">You've Discovered My Secret!</h1>
 
-					<Col lg="2">
-						<InputGroup className="fs-2 mb-3">
+					<Col lg="5">
+						<InputGroup className="mb-3">
 							<Form.Control
 								placeholder="Search"
 								aria-label="Search"
