@@ -5,7 +5,8 @@ import { Spinner } from 'react-bootstrap';
 
 export default function Secrets() {
 	const { user, secrets, fetchData } = useContext(Context);
-
+	
+	// eslint-disable-next-line
 	useEffect(() => fetchData(true), []);
 
 	return (
@@ -22,7 +23,7 @@ export default function Secrets() {
 								</p>
 							))
 						) : (
-							<p className="secret-text">No Secrets submited yet, You can be the first!</p>
+							<p className="secret-text">No Secrets yet, You can be the first!</p>
 						)
 					) : (
 						<Spinner animation="border" variant="dark" />

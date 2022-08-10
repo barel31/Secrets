@@ -10,5 +10,6 @@ export default function Logout() {
 	useEffect(() => {
 		logInOutHandler();
 		nav('/');
+	// eslint-disable-next-line
 	}, []);
 }

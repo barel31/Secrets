@@ -17,6 +17,7 @@ export default function CallBack() {
 			toast.error('Login was failed.');
 			nav('/login');
 		} else nav('/secrets');
+	// eslint-disable-next-line
 	}, []);
 
 	return <>redirect...</>;

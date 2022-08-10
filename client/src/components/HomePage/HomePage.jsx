@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Context from '../../Context';
 
@@ -11,6 +10,7 @@ export default function HomePage() {
 
 	useEffect(() => {
 		if (user?.id) nav('/secrets');
+	// eslint-disable-next-line
 	}, [user]);
 
 	return (

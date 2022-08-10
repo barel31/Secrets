@@ -19,6 +19,7 @@ export default function Login() {
 			toast.warning('You already logged in. rediect you to Secrets page.');
 			nav('/secrets');
 		}
+	// eslint-disable-next-line
 	}, [user]);
 
 	const google = () => {

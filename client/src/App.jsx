@@ -37,6 +37,7 @@ function App() {
 	const [fetched, setFetched] = useState(isLocal3001);
 	const [secrets, setSecrets] = useState();
 
+	// eslint-disable-next-line
 	useEffect(() => fetchData(), []);
 
 	const fetchData = (secretsOnly = false) => {

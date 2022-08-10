@@ -10,7 +10,6 @@ export default function Submit() {
 	const nav = useNavigate();
 
 	const [fetchState, setFetchState] = useState({ switch: -1, button: -1 });
-	const [privateCheck, setPrivateCheck] = useState(false);
 
 	const { user, fetched, fetchData, toastUpdate } = useContext(Context);
 
@@ -21,6 +20,7 @@ export default function Submit() {
 			toast.warn("You're not logged in. Redirect to login page.");
 			nav('/login');
 		}
+	// eslint-disable-next-line
 	}, [fetched]);
 
 	const deleteSecret = (secretIndex) => {
@@ -81,7 +81,7 @@ export default function Submit() {
 		const secret = secretInput.current.value;
 
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secret, isPrivate: privateCheck })
+			.post(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secret, isPrivate: false })
 			.then((res) => {
 				setFetchState({ switch: -1, button: -1 });
 
