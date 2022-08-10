@@ -1,13 +1,31 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 import Context from '../Context';
 import { Link } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
+import { Spinner, InputGroup, Form, Button, Col } from 'react-bootstrap';
 
 export default function Secrets() {
 	const { user, secrets, fetchData } = useContext(Context);
-	
-	// eslint-disable-next-line
-	useEffect(() => fetchData(true), []);
+
+	const [secretFiltered, setSecretFiltered] = useState();
+
+	const searchValue = useRef();
+
+	useEffect(() => {
+		fetchData(true);
+		// eslint-disable-next-line
+	}, []);
+
+	useEffect(() => {
+		if (secrets) onSearch();
+		// eslint-disable-next-line
+	}, [secrets]);
+
+	const onSearch = () => {
+		const result = secrets.filter((secret) =>
+			secret.toLowerCase().includes(searchValue.current.value.toLowerCase())
+		);
+		setSecretFiltered(result);
+	};
 
 	return (
 		<div className="Secrets jumbotron centered">
@@ -15,15 +33,30 @@ export default function Secrets() {
 				<div className="container">
 					<i className="fas fa-key fa-6x"></i>
 					<h1 className="display-3">You've Discovered My Secret!</h1>
-					{secrets ? (
-						secrets.length ? (
-							secrets.map((secret, i) => (
+
+					<Col lg="2">
+						<InputGroup className="fs-2 mb-3">
+							<Form.Control
+								placeholder="Search"
+								aria-label="Search"
+								ref={searchValue}
+								onChange={onSearch}
+							/>
+							<Button variant="primary" onClick={onSearch}>
+								<i className="fas fa-search" />
+							</Button>
+						</InputGroup>
+					</Col>
+
+					{secretFiltered ? (
+						secretFiltered.length ? (
+							secretFiltered.map((secret, i) => (
 								<p key={i} className="secret-text">
 									{secret}
 								</p>
 							))
 						) : (
-							<p className="secret-text">No Secrets yet, You can be the first!</p>
+							<p className="display-6">No Secrets found!</p>
 						)
 					) : (
 						<Spinner animation="border" variant="dark" />

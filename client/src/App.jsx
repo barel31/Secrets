@@ -14,6 +14,7 @@ import CallBack from './components/CallBack';
 import NotFoundPage from './components/NotFoundPage';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
+import Feedback from './components/Feedback';
 
 import './App.scss';
 import './styles/bootstrap-social.css';
@@ -109,14 +110,15 @@ function App() {
 					<div className="app-inner-container">
 						<Routes>
 							<Route exact path="/" element={<HomePage />} />
-							<Route exact path="/login" element={<Login />} />
 							<Route exact path="/register" element={<Register />} />
+							<Route exact path="/login" element={<Login />} />
+							<Route exact path="/logout" element={<Logout />} />
 							<Route exact path="/secrets" element={<Secrets />} />
 							<Route exact path="/submit" element={<Submit />} />
 							<Route exact path="/callback/google/success" element={<CallBack />} />
 							<Route exact path="/callback/facebook/success" element={<CallBack />} />
 							<Route exact path="/callback/login/failed" element={<CallBack />} />
-							<Route exact path="/logout" element={<Logout />} />
+							<Route exact path="/feedback" element={<Feedback />} />
 							<Route path="/404" element={<NotFoundPage />} />
 							<Route path="*" element={<Navigate to="/404" replace />} />
 						</Routes>
