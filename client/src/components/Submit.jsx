@@ -107,8 +107,7 @@ export default function Submit() {
 		<div className="Submit container text-center mt-5">
 			<div className="jumbotron centered">
 				<i className="fas fa-key fa-6x"></i>
-				<h1 className="display-3">Secrets</h1>
-				<p className="display-6">Your Secrets:</p>
+				<h1 className="display-3">Your Secrets</h1>
 
 				<div className="secret-list">
 					{user?.secrets?.length ? (
