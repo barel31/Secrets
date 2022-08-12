@@ -26,7 +26,7 @@ export default function NavBar() {
 
 						{user?.id && (
 							<>
-								<Nav.Link as={Link} to="/submit" className="nav-link" eventKey="2">
+								<Nav.Link as={Link} to="/submit" className="nav-link" eventKey="3">
 									Submit
 								</Nav.Link>
 							</>
@@ -55,6 +55,9 @@ export default function NavBar() {
 								</Nav.Link>
 							</>
 						)}
+						<Nav.Link as={Link} to="/feedback" className="nav-link" eventKey="7">
+							Feedback
+						</Nav.Link>
 					</Nav>
 				</Navbar.Collapse>
 			</Container>

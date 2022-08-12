@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const User = require('../models/users');
+const Feedback = require('../models/feedback');
 
 const error = (res, code, err) => {
 	console.log(`${Date()}: ${code} - ${err}`);
@@ -94,11 +95,23 @@ router.get('/user/username', (req, res) => {
 		User.findById(req.user.id, (err, found) => {
 			if (err) error(res, 500, err);
 
-			if (found) {
-				res.status(200).json({ username: found.username });
-			} else res.status(401).json({ error: 'Unable to found user.' });
+			if (found) res.status(200).json({ username: found.username });
+			else res.status(401).json({ error: 'Unable to found user.' });
 		});
 	} else res.status(401).json({ error: 'Unable to find user.' });
+});
+
+router.post('/feedback', (req, res) => {
+	const feedback = new Feedback({
+		name: { first: req.body.firstName, last: req.body.lastName },
+		range: req.body.range,
+		comments: req.body.comments,
+	}).save((err) => {
+		if (err) {
+			console.log(err);
+			res.status(500).json({ succes: false });
+		} else res.status(200).json({ success: true });
+	});
 });
 
 module.exports = router;

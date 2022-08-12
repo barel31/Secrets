@@ -20,15 +20,15 @@ export default function Submit() {
 			toast.warn("You're not logged in. Redirect to login page.");
 			nav('/login');
 		}
-	// eslint-disable-next-line
+		// eslint-disable-next-line
 	}, [fetched]);
 
 	const deleteSecret = (secretIndex) => {
 		if (!window.confirm('Are you sure you want delete your secret?')) return;
 
-		setFetchState({ ...fetchState, button: secretIndex });
-
+		setFetchState((fetchState) => ({ ...fetchState, button: secretIndex }));
 		const toastId = toast.loading('Deleting secret...');
+
 		axios
 			.delete(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex })
 			.then((res) => {
@@ -49,7 +49,7 @@ export default function Submit() {
 	};
 
 	const changeSecretState = (secretIndex, isPrivate) => {
-		setFetchState({ ...fetchState, switch: secretIndex });
+		setFetchState((fetchState) => ({ ...fetchState, switch: secretIndex }));
 		const toastId = toast.loading('Updating secret...');
 
 		axios
@@ -77,7 +77,6 @@ export default function Submit() {
 
 		setFetchState({ ...fetchState, button: -2 });
 		const toastId = toast.loading('Submiting...');
-
 		const secret = secretInput.current.value;
 
 		axios
@@ -141,7 +140,6 @@ export default function Submit() {
 											size="lg"
 											role="status"
 											aria-hidden="true"
-											variant=""
 										/>
 										<span className="visually-hidden">Loading...</span>
 									</Button>

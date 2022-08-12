@@ -8,17 +8,13 @@ export default function Secrets() {
 
 	const [secretFiltered, setSecretFiltered] = useState();
 
-	const searchValue = useRef();
+	const searchValue = useRef();  
 
-	useEffect(() => {
-		fetchData(true);
-		// eslint-disable-next-line
-	}, []);
+	// eslint-disable-next-line
+	useEffect(() => fetchData(true), []);
 
-	useEffect(() => {
-		if (secrets) onSearch();
-		// eslint-disable-next-line
-	}, [secrets]);
+	// eslint-disable-next-line
+	useEffect(() => secrets && onSearch(), [secrets]);
 
 	const onSearch = () => {
 		const result = secrets.filter((secret) =>
