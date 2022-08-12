@@ -14,7 +14,7 @@ import CallBack from './components/CallBack';
 import NotFoundPage from './components/NotFoundPage';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
-import Feedback from './components/Feedback';
+import Feedback from './components/Feedback/Feedback';
 
 import './App.scss';
 import './styles/bootstrap-social.css';

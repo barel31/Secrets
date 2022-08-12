@@ -1,9 +1,11 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import Context from '../Context';
+import Context from '../../Context';
 import { Spinner, Form, Button, Col, Row, FloatingLabel } from 'react-bootstrap';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+
+import './Feedback.scss';
 
 export default function Feedback() {
 	const { toastUpdate } = useContext(Context);

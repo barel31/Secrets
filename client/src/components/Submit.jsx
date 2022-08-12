@@ -26,7 +26,7 @@ export default function Submit() {
 	const deleteSecret = (secretIndex) => {
 		if (!window.confirm('Are you sure you want delete your secret?')) return;
 
-		setFetchState((fetchState) => ({ ...fetchState, button: secretIndex }));
+		setFetchState((prev) => ({ ...prev, button: secretIndex }));
 		const toastId = toast.loading('Deleting secret...');
 
 		axios
@@ -49,7 +49,7 @@ export default function Submit() {
 	};
 
 	const changeSecretState = (secretIndex, isPrivate) => {
-		setFetchState((fetchState) => ({ ...fetchState, switch: secretIndex }));
+		setFetchState((prev) => ({ ...prev, switch: secretIndex }));
 		const toastId = toast.loading('Updating secret...');
 
 		axios
@@ -75,7 +75,7 @@ export default function Submit() {
 	const submitSecret = (e) => {
 		e.preventDefault();
 
-		setFetchState({ ...fetchState, button: -2 });
+		setFetchState((prev) => ({ ...prev, button: -2 }));
 		const toastId = toast.loading('Submiting...');
 		const secret = secretInput.current.value;
 
