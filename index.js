@@ -29,8 +29,6 @@ app.use(
 		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
-		// name: 'session',
-		// keys: ['secrets'],
 		maxAge: 24 * 60 * 100,
 	})
 );

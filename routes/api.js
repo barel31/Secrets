@@ -101,17 +101,27 @@ router.get('/user/username', (req, res) => {
 	} else res.status(401).json({ error: 'Unable to find user.' });
 });
 
-router.post('/feedback', (req, res) => {
-	const feedback = new Feedback({
-		name: { first: req.body.firstName, last: req.body.lastName },
-		range: req.body.range,
-		comments: req.body.comments,
-	}).save((err) => {
-		if (err) {
-			console.log(err);
-			res.status(500).json({ succes: false });
-		} else res.status(200).json({ success: true });
+router
+	.route('/feedback')
+	.post((req, res) => {
+		new Feedback({
+			name: { first: req.body.firstName, last: req.body.lastName },
+			range: req.body.range,
+			comments: req.body.comments,
+		}).save((err) => {
+			if (err) return error(res, 500, err);
+			
+			res.status(200).json({ success: true });
+		});
+	})
+	.get((req, res) => {
+		if (req.body.password === process.env.ADMIN_PASSWORD) {
+			Feedback.find((err, found) => {
+				if (err) return error(res, 500, err);
+
+				res.status(200).json({ success: true, feedback: found });
+			});
+		} else res.status(401).json({ error: 'unauthorized' });
 	});
-});
 
 module.exports = router;

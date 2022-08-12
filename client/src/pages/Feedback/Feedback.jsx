@@ -5,6 +5,8 @@ import { Spinner, Form, Button, Col, Row, FloatingLabel } from 'react-bootstrap'
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+import ButtonLoader from '../../components/ButtonLoader';
+
 import './Feedback.scss';
 
 export default function Feedback() {
@@ -104,16 +106,7 @@ export default function Feedback() {
 									</FloatingLabel>
 
 									{fetching ? (
-										<Button variant="danger" disabled>
-											<Spinner
-												as="span"
-												animation="border"
-												size="lg"
-												role="status"
-												aria-hidden="true"
-											/>
-											<span className="visually-hidden">Loading...</span>
-										</Button>
+										<ButtonLoader />
 									) : (
 										<Button variant="primary" type="submit">
 											Send
