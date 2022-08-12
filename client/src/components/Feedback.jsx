@@ -18,7 +18,7 @@ export default function Feedback() {
 
 		const rangeV = document.getElementById('rangeV');
 		const value = e.target.value;
-		const newPosition = 10 - value * 0.2;
+		const newPosition = 10 - value * 0.18;
 
 		rangeV.innerHTML = `<span>${value}</span>`;
 		rangeV.style.left = `calc(${value}% + (${newPosition}px))`;
@@ -71,28 +71,20 @@ export default function Feedback() {
 											label="First name"
 											controlId="feedback-firstname"
 											className="feedback-floating-left mb-3">
-											<Form.Control
-												placeholder="First name"
-												ref={feedbackFormRef.firstName}
-												required
-											/>
+											<Form.Control placeholder="First name" ref={feedbackFormRef.firstName} />
 										</FloatingLabel>
 										<FloatingLabel
 											label="Last name"
 											controlId="feedback-lastname"
 											className="feedback-floating-left mb-3">
-											<Form.Control
-												placeholder="Last name"
-												ref={feedbackFormRef.lastName}
-												required
-											/>
+											<Form.Control placeholder="Last name" ref={feedbackFormRef.lastName} />
 										</FloatingLabel>
 									</Row>
 
 									<Form.Label>Overlall experience:</Form.Label>
 									<div className="range-wrap mb-3">
 										<Form.Range onChange={formRangeChange} id="feedback-range" />
-										<div className="range-value" id="rangeV"></div>
+										<div className="range-value" id="rangeV" />
 										<div className="d-flex justify-content-between font-weight-bold">
 											<span>0</span>
 											<span>100</span>
