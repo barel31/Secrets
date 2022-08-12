@@ -8,7 +8,7 @@ mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true }, (err) => {
 
 const secretsSchema = new mongoose.Schema({
 	secret: String,
-	isPrivate: Boolean,
+	isPrivate: { type: Boolean, default: false },
 	date: { type: Date, default: Date.now },
 });
 

@@ -9,7 +9,7 @@ export default function HomePage() {
 	const { user } = useContext(Context);
 
 	useEffect(() => {
-		// if (user?.id) nav('/secrets');
+		if (user?.id) nav('/secrets');
 		// eslint-disable-next-line
 	}, [user]);
 

@@ -12,7 +12,7 @@ import './AdminPanel.scss';
 export default function AdminPanel() {
 	const { toastUpdate } = useContext(Context);
 
-	const [data, setData] = useState({ fetching: false, password: '', isAuthorized: false, feedbacks: [] });
+	const [data, setData] = useState({ fetching: false, password: '', isAuthorized: false, feedback: [] });
 
 	useEffect(() => {
 		if (data.password.length) {
@@ -23,6 +23,12 @@ export default function AdminPanel() {
 					setData((prev) => ({ ...prev, fetching: false }));
 
 					if (res.status === 200) {
+						setData((prev) => ({
+							...prev,
+							fetching: true,
+							isAuthorized: true,
+							feedback: res.data.feedback,
+						}));
 					} else {
 					}
 				})
@@ -31,45 +37,43 @@ export default function AdminPanel() {
 					console.log(err);
 				});
 		}
+		// eslint-disable-next-line
 	}, []);
 
 	return (
-		<div className="Admin jumbotron">
-			<div className="jumbotron text-center">
-				<div className="container">
-					<i className="fas fa-key fa-6x" />
-					<h1 className="display-1">Admin Panel</h1>
+		<div className="Admin">
+			<h1 className="display-1">Admin Panel</h1>
 
-					{!data.isAuthorized ? (
-						<>
-							<Form>
-								<Stack gap={2} className="admin-panel-container col-md-5 mx-auto">
-									<FloatingLabel label="Password" controlId="admin-panel-passowrd">
-										<Form.Control
-											placeholder="First name"
-											onChange={(e) => setData((prev) => ({ ...prev, password: e.target.value }))}
-										/>
-									</FloatingLabel>
+			{!data.isAuthorized ? (
+				<>
+					<Form>
+						<Stack gap={2} className="admin-panel-container col-md-5 mx-auto">
+							<FloatingLabel label="Password" controlId="admin-panel-passowrd">
+								<Form.Control
+									placeholder="First name"
+									onChange={(e) => setData((prev) => ({ ...prev, password: e.target.value }))}
+								/>
+							</FloatingLabel>
 
-									{data.fetching ? (
-										<ButtonLoader />
-									) : (
-										<Button variant="primary" type="submit">
-											Enter
-										</Button>
-									)}
-								</Stack>
-							</Form>
-						</>
-					) : (
-						<></>
-					)}
+							{data.fetching ? (
+								<ButtonLoader />
+							) : (
+								<Button variant="primary" type="submit">
+									Enter
+								</Button>
+							)}
+						</Stack>
+					</Form>
+				</>
+			) : (
+				<>
+					<h3 className="display-5">IN PROGRESS</h3>
+				</>
+			)}
 
-					<Link to="/" className="btn btn-dark m-3">
-						HOME
-					</Link>
-				</div>
-			</div>
+			<Link to="/" className="btn btn-dark m-3">
+				HOME
+			</Link>
 		</div>
 	);
 }
