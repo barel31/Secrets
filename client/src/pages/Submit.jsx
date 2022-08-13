@@ -39,7 +39,7 @@ export default function Submit() {
 					user.secrets.splice(secretIndex, 1);
 				} else {
 					toastUpdate(toastId, 'error', 'ERROR: Cannot delete secret.');
-					throw new Error('Cannot delete secret.errr');
+					throw new Error('Cannot delete secret.');
 				}
 			})
 			.catch((err) => {

@@ -51,6 +51,7 @@ export default function AdminPanel() {
 				} else {
 					toastUpdate(toastId, 'error', 'ERROR: Unable to authorized.');
 					setData((prev) => ({ ...prev, fetching: false, fetchDelete: 0 }));
+					throw new Error('ERROR: Unable to authorized.');
 				}
 			})
 			.catch((err) => {
