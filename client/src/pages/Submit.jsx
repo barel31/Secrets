@@ -33,17 +33,18 @@ export default function Submit() {
 			.delete(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex })
 			.then((res) => {
 				setFetchState({ switch: -1, button: -1 });
+
 				if (res.status === 200) {
 					toastUpdate(toastId, 'success', 'Secret deleted successfully!');
 					user.secrets.splice(secretIndex, 1);
 				} else {
 					toastUpdate(toastId, 'error', 'ERROR: Cannot delete secret.');
-					throw new Error('Cannot delete secret.');
+					throw new Error('Cannot delete secret.errr');
 				}
 			})
 			.catch((err) => {
 				setFetchState({ switch: -1, button: -1 });
-				toastUpdate(toastId, 'error', 'ERROR: Cannot delete secret.');
+				toastUpdate(toastId, 'error', err);
 				console.log(err);
 			});
 	};
@@ -79,7 +80,10 @@ export default function Submit() {
 		const toastId = toast.loading('Submiting...');
 
 		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secret: e.target.secret.value })
+			.post(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, {
+				secret: e.target.secret.value,
+				isPrivate: false,
+			})
 			.then((res) => {
 				setFetchState({ switch: -1, button: -1 });
 
@@ -130,10 +134,7 @@ export default function Submit() {
 							</InputGroup.Text>
 
 							{fetchState.button === i ? (
-								<Button variant="danger" disabled>
-									<Spinner as="span" animation="border" size="lg" role="status" aria-hidden="true" />
-									<span className="visually-hidden">Loading...</span>
-								</Button>
+								<ButtonLoader variant="danger" size="sm" />
 							) : (
 								<Button variant="btn btn-danger" onClick={() => deleteSecret(i)}>
 									Delete
@@ -144,7 +145,7 @@ export default function Submit() {
 				) : user?.id ? (
 					<p className="secret-text">You didn't submit any secret yet.</p>
 				) : (
-					<ButtonLoader />
+					<ButtonLoader variant="dark" size="lg" />
 				)}
 			</div>
 

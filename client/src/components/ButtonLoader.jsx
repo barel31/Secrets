@@ -1,10 +1,10 @@
 import React from 'react';
 import { Spinner, Button } from 'react-bootstrap';
 
-export default function ButtonLoader() {
+export default function ButtonLoader({variant, size}) {
 	return (
-		<Button variant="danger" disabled>
-			<Spinner as="span" animation="border" size="lg" role="status" aria-hidden="true" />
+		<Button variant={variant} disabled>
+			<Spinner as="span" animation="border" size={size} role="status" aria-hidden="true" />
 			<span className="visually-hidden">Loading...</span>
 		</Button>
 	);
