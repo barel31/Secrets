@@ -73,7 +73,7 @@ export default function Register() {
 							</FloatingLabel>
 							<div className="d-flex justify-content-between">
 								{fetching ? (
-									<ButtonLoader />
+									<ButtonLoader variant='danger' size='sm'/>
 								) : (
 									<Button type="submit" variant="dark me-auto">
 										Register

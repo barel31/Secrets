@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Context from '../../Context';
 import { Spinner, Form, Button, FloatingLabel, Stack, InputGroup } from 'react-bootstrap';
@@ -39,7 +39,7 @@ export default function AdminPanel() {
 					toastUpdate(
 						toastId,
 						'success',
-						deleteId ? 'Delete feedback successfully.' : 'Successfully authorized.'
+						deleteId ? 'Feedback deleted successfully.' : 'Authorized successfully.'
 					);
 					setData((prev) => ({
 						...prev,
@@ -51,6 +51,7 @@ export default function AdminPanel() {
 				} else {
 					toastUpdate(toastId, 'error', 'ERROR: Unable to authorized.');
 					setData((prev) => ({ ...prev, fetching: false, fetchDelete: 0 }));
+					throw new Error('ERROR: Unable to authorized.');
 				}
 			})
 			.catch((err) => {
@@ -81,7 +82,7 @@ export default function AdminPanel() {
 							</FloatingLabel>
 
 							{data.fetching ? (
-								<ButtonLoader />
+								<ButtonLoader variant="danger" size="sm" />
 							) : (
 								<Button variant="primary" type="submit">
 									Enter

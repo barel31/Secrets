@@ -98,9 +98,9 @@ export default function Feedback() {
 							</FloatingLabel>
 
 							{fetching ? (
-								<ButtonLoader />
+								<ButtonLoader variant='dark' size='lg'/>
 							) : (
-								<Button variant="primary" type="submit">
+								<Button variant="primary" type="submit" size='lg'>
 									Send
 								</Button>
 							)}

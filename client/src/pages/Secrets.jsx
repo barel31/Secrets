@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import Context from '../Context';
 import { Link } from 'react-router-dom';
-import { Spinner, InputGroup, Form, Button, Col } from 'react-bootstrap';
+import { Spinner, InputGroup, Form, Button } from 'react-bootstrap';
 
 export default function Secrets() {
 	const { user, secrets, fetchData } = useContext(Context);
@@ -27,14 +27,12 @@ export default function Secrets() {
 		<div className="Secrets">
 			<h1 className="display-3">You've Discovered My Secret!</h1>
 
-			<Col lg="5">
-				<InputGroup className="mb-3">
-					<Form.Control placeholder="Search" aria-label="Search" ref={searchValue} onChange={onSearch} />
-					<Button variant="primary" onClick={onSearch}>
-						<i className="fas fa-search" />
-					</Button>
-				</InputGroup>
-			</Col>
+			<InputGroup className="mb-3">
+				<Form.Control placeholder="Search" aria-label="Search" ref={searchValue} onChange={onSearch} />
+				<Button variant="primary" onClick={onSearch}>
+					<i className="fas fa-search" />
+				</Button>
+			</InputGroup>
 
 			{secretFiltered ? (
 				secretFiltered.length ? (
