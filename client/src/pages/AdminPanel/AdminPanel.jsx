@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Context from '../../Context';
-import { Spinner, Form, Button, Col, Row, FloatingLabel, Stack, InputGroup } from 'react-bootstrap';
+import { Spinner, Form, Button, FloatingLabel, Stack, InputGroup } from 'react-bootstrap';
 import axios from 'axios';
 import date from 'date-and-time';
 import { toast } from 'react-toastify';
@@ -13,46 +13,54 @@ import './AdminPanel.scss';
 export default function AdminPanel() {
 	const { toastUpdate } = useContext(Context);
 
-	const [data, setData] = useState({ fetching: false, password: '', isAuthorized: false, feedback: [] });
-
-	const fetchState = { switch: null, button: null };
+	const [data, setData] = useState({
+		fetching: false,
+		password: '',
+		isAuthorized: false,
+		feedback: [],
+		fetchDelete: 0,
+	});
 
 	const handleLoginSubmit = (e) => {
 		e.preventDefault();
+		fetchData();
+	};
 
-		setData((prev) => ({ ...prev, fetching: true }));
-		const toastId = toast.loading('Loading...');
+	const fetchData = (deleteId = 0) => {
+		setData((prev) => ({ ...prev, fetching: true, fetchDelete: deleteId }));
+		const password = data.password;
 
-		const password = e.target.password.value;
-		axios
-			.post(`${process.env.REACT_APP_WEB_URL}/admin/feedback`, { password })
+		const toastId = toast.loading(deleteId ? 'Deleting feedback...' : 'Loading...');
+		const axiosMethod = deleteId ? axios.delete : axios.post;
+
+		axiosMethod(`${process.env.REACT_APP_WEB_URL}/admin/feedback`, { data: { password, deleteId } })
 			.then((res) => {
 				if (res.status === 200) {
-					toastUpdate(toastId, 'success', 'Successfully authorized.');
+					toastUpdate(
+						toastId,
+						'success',
+						deleteId ? 'Delete feedback successfully.' : 'Successfully authorized.'
+					);
 					setData((prev) => ({
 						...prev,
 						fetching: true,
+						fetchDelete: 0,
 						isAuthorized: true,
-						feedback: res.data.feedback,
+						feedback: deleteId ? data.feedback.filter((v) => v._id !== deleteId) : res.data.feedback,
 					}));
-					console.log(res.data.feedback);
 				} else {
-					// setData((prev) => ({ ...prev, fetching: false }));
-					// toastUpdate(toastId, 'error', 'ERROR: Unable to authorized.');
-					throw 'ERROR: Unable to authorized';
+					toastUpdate(toastId, 'error', 'ERROR: Unable to authorized.');
+					setData((prev) => ({ ...prev, fetching: false, fetchDelete: 0 }));
 				}
 			})
 			.catch((err) => {
-				setData((prev) => ({ ...prev, fetching: false }));
-				toastUpdate(toastId, 'error', 'ERROR: Unable to authorized.');
+				setData((prev) => ({ ...prev, fetching: false, fetchDelete: 0 }));
+				toastUpdate(toastId, 'error', err);
 				console.log(err);
 			});
 	};
 
-	const handleFeedbackDelete = (id) => {
-		if (!window.confirm('Are you sure you want delete the feedback?')) return;
-		console.log(id);
-	};
+	const handleFeedbackDelete = (id) => window.confirm('Are you sure you want delete the feedback?') && fetchData(id);
 
 	return (
 		<div className="Admin">
@@ -85,8 +93,8 @@ export default function AdminPanel() {
 			) : (
 				<>
 					<div className="container d-flex flex-column justify-content-center flex-wrap w-100">
-						<h3 className="display-5">IN PROGRESS</h3>
-						{data.feedback.map((feedback, i) => (
+						<h3 className="display-5">User feedback:</h3>
+						{data?.feedback?.map((feedback) => (
 							<InputGroup key={feedback._id} className="mb-3">
 								<InputGroup.Text>
 									{date.format(new Date(feedback.date), 'DD/M/YY HH:mm')}
@@ -95,10 +103,11 @@ export default function AdminPanel() {
 											<br />
 											{feedback.name?.first} {feedback.name?.last}
 										</>
-									)}
+									)}{' '}
+									[{feedback.range}%]
 								</InputGroup.Text>
 								<Form.Control as="textarea" minrows="1" value={feedback.comments} disabled />
-								{fetchState.button === i ? (
+								{data.fetchDelete === feedback._id ? (
 									<Button variant="danger" disabled>
 										<Spinner
 											as="span"
