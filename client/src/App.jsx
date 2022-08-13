@@ -30,9 +30,9 @@ const toastUpdate = (id, type, str) =>
 		closeOnClick: 'true',
 	});
 
-function App() {
-	const isLocal3001 = window.location.href.includes('localhost:3001');
+const isLocal3001 = window.location.href.includes('localhost:3001');
 
+function App() {
 	const nav = useNavigate();
 
 	const [user, setUser] = useState();

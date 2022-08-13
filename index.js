@@ -11,6 +11,7 @@ const cors = require('cors');
 require('./passport');
 const authRoute = require('./routes/auth');
 const apiRoute = require('./routes/api');
+const adminRoute = require('./routes/admin');
 
 const app = express();
 
@@ -41,6 +42,9 @@ app.use('/auth', authRoute);
 
 // API
 app.use('/api', apiRoute);
+
+// ADMIN
+app.use('/admin', adminRoute);
 
 app.use('/static', express.static(path.join(__dirname, '/client/build/static')));
 app.get('/*', (req, res) => {
