@@ -11,6 +11,7 @@ const cors = require('cors');
 require('./passport');
 const authRoute = require('./routes/auth');
 const apiRoute = require('./routes/api');
+const adminRoute = require('./routes/admin');
 
 const app = express();
 
@@ -29,8 +30,6 @@ app.use(
 		secret: process.env.SESSION_SECRET,
 		resave: false,
 		saveUninitialized: false,
-		// name: 'session',
-		// keys: ['secrets'],
 		maxAge: 24 * 60 * 100,
 	})
 );
@@ -44,18 +43,13 @@ app.use('/auth', authRoute);
 // API
 app.use('/api', apiRoute);
 
-// const production = true;
-const production = false;
+// ADMIN
+app.use('/admin', adminRoute);
 
-if (production) {
-	app.use(express.static(path.join(__dirname, '/client/build/')));
-	console.log('production');
-} else {
-	app.use('/static', express.static(path.join(__dirname, '/client/build/static')));
-	app.get('/*', function (req, res) {
-		res.sendFile('index.html', { root: path.join(__dirname, '/client/build/') });
-	});
-}
+app.use('/static', express.static(path.join(__dirname, '/client/build/static')));
+app.get('/*', (req, res) => {
+	res.sendFile('index.html', { root: path.join(__dirname, '/client/build/') });
+});
 
 app.listen(process.env.PORT || '3000', () => {
 	console.log(`${Date()}: Server started on port ${process.env.PORT || 3000}`);

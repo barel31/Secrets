@@ -1,24 +1,17 @@
 @import '~bootstrap/scss/bootstrap';
 
 .App {
-	.container--app {
-		padding-top: 200px;
-		background-color: #e8ecef;
+	background-color: #e8ecef;
 
-		.HomePage {
-			margin: auto;
+	.app-container {
+		.app-inner-container {
+			min-height: calc(100vh - 120px);
+			padding-bottom: 2rem;
+			padding-top: 10em;
 
-			svg {
-				margin: auto;
+			@media screen and (max-width: 1200px) {
+				padding-top: 50px;
 			}
-
-			button {
-				margin: 0 0.5rem;
-			}
-		}
-
-		@media screen and (max-width: 1200px) {
-			padding-top: 50px;
 		}
 	}
 }
@@ -35,9 +28,20 @@
 	justify-content: space-between;
 }
 
-.navbar-logout-link {
-	display: block;
-	@media screen and (min-width: 992px) {
+.Navbar {
+	.nav-link-logout {
 		display: inline;
+
+		@media screen and (max-width: 992px) {
+			display: block;
+		}
+	}
+}
+
+.Footer {
+	footer {
+		text-align: center;
+		margin: 0;
+		margin-top: auto;
 	}
 }

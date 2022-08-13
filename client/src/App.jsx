@@ -4,36 +4,62 @@ import Context from './Context';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 
-import HomePage from './components/HomePage/HomePage';
-import Login from './components/Auth/Login';
-import Logout from './components/Auth/Logout';
-import Register from './components/Auth/Register';
-import Secrets from './components/Secrets';
-import Submit from './components/Submit';
-import CbGoogle from './components/CbGoogle';
-import NotFoundPage from './components/NotFoundPage';
-import NavBar from './components/NavBar';
+import HomePage from './pages/HomePage/HomePage';
+import Login from './pages/Auth/Login';
+import Logout from './pages/Auth/Logout';
+import Register from './pages/Auth/Register';
+import Secrets from './pages/Secrets';
+import Submit from './pages/Submit';
+import CallBack from './pages/CallBack';
+import NotFoundPage from './pages/NotFoundPage';
+import NavBar from './pages/NavBar';
+import Footer from './pages/Footer';
+import Feedback from './pages/Feedback/Feedback';
+import AdminPanel from './pages/AdminPanel/AdminPanel';
 
 import './App.scss';
 import './styles/bootstrap-social.css';
 import 'react-toastify/dist/ReactToastify.css';
 
+const toastUpdate = (id, type, str) =>
+	toast.update(id, {
+		render: str,
+		type: type,
+		isLoading: false,
+		autoClose: 5000,
+		closeOnClick: 'true',
+	});
+
+const isLocal3001 = window.location.href.includes('localhost:3001');
+
 function App() {
 	const nav = useNavigate();
 
 	const [user, setUser] = useState();
-	const [fetched, setFetched] = useState(false);
+	const [fetched, setFetched] = useState(isLocal3001);
 	const [secrets, setSecrets] = useState();
 
+	// eslint-disable-next-line
 	useEffect(() => fetchData(), []);
 
 	const fetchData = (secretsOnly = false) => {
 		if (!secretsOnly) {
+			if (isLocal3001) {
+				return setUser({
+					id: 'test',
+					username: 'demo_user',
+					secrets: [
+						{ secret: 'false', isPrivate: false, date: '2022-08-09T16:51:06.871Z' },
+						{ secret: 'true', isPrivate: true, date: '2022-08-09T16:51:04.664Z' },
+					],
+				});
+			}
 			setFetched(false);
 
 			axios(`${process.env.REACT_APP_WEB_URL}/auth/login/success`)
 				.then((res) => {
 					setFetched(true);
+
 					if (res.status === 200) {
 						if (res.data.success) {
 							console.log(res.data);
@@ -44,22 +70,9 @@ function App() {
 
 							setUser(user);
 						} else setUser();
-					} else {
-						throw new Error('authentication has been failed!');
-					}
+					} else throw new Error('authentication has been failed!');
 				})
-				.catch((err) => {
-					console.log(err);
-					setUser({
-						id: 'test',
-						username: 'demo_user',
-						secrets: [
-							{ secret: 'false', isPrivate: false },
-							{ secret: 'true', isPrivate: true },
-						],
-					});
-					toast.warning('Unable to fetch user info from api. loading demo_user.');
-				});
+				.catch((err) => console.log(err));
 		}
 
 		axios
@@ -92,20 +105,32 @@ function App() {
 
 	return (
 		<div className="App">
-			<Context.Provider value={{ user, setUser, fetchData, secrets, fetched, logInOutHandler }}>
+			<Context.Provider value={{ user, setUser, fetchData, secrets, fetched, logInOutHandler, toastUpdate }}>
 				<NavBar />
-				<div className="container--app">
-					<Routes>
-						<Route exact path="/" element={<HomePage />} />
-						<Route exact path="/login" element={<Login />} />
-						<Route exact path="/register" element={<Register />} />
-						<Route exact path="/secrets" element={<Secrets />} />
-						<Route exact path="/submit" element={<Submit />} />
-						<Route exact path="/cb/google" element={<CbGoogle />} />
-						<Route exact path="/logout" element={<Logout />} />
-						<Route path="/404" element={<NotFoundPage />} />
-						<Route path="*" element={<Navigate to="/404" replace />} />
-					</Routes>
+				<div className="app-container">
+					<div className="app-inner-container">
+						<div className="jumbotron text-center">
+							<div className="container">
+								<i className="fas fa-key fa-6x" />
+								<Routes>
+									<Route exact path="/" element={<HomePage />} />
+									<Route exact path="/register" element={<Register />} />
+									<Route exact path="/login" element={<Login />} />
+									<Route exact path="/logout" element={<Logout />} />
+									<Route exact path="/secrets" element={<Secrets />} />
+									<Route exact path="/submit" element={<Submit />} />
+									<Route exact path="/callback/google/success" element={<CallBack />} />
+									<Route exact path="/callback/facebook/success" element={<CallBack />} />
+									<Route exact path="/callback/login/failed" element={<CallBack />} />
+									<Route exact path="/feedback" element={<Feedback />} />
+									<Route exact path="/admin" element={<AdminPanel />} />
+									<Route path="/404" element={<NotFoundPage />} />
+									<Route path="*" element={<Navigate to="/404" replace />} />
+								</Routes>
+							</div>
+						</div>
+					</div>
+					<Footer />
 				</div>
 			</Context.Provider>
 			<ToastContainer position="bottom-right" newestOnTop pauseOnFocusLoss={false} limit={3} />

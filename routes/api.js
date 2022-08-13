@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const User = require('../models/users');
+const Feedback = require('../models/feedback');
 
 const error = (res, code, err) => {
 	console.log(`${Date()}: ${code} - ${err}`);
@@ -70,7 +71,7 @@ router
 	.post((req, res) => {
 		if (!req.user) return error(res, 401, 'User unauthorized.');
 
-		const { secret, isPrivate, secretIndex } = req.body;
+		const { secret, isPrivate } = req.body;
 
 		if (!secret || typeof isPrivate !== 'boolean') return error(res, 400, 'mismatch arguments.');
 
@@ -94,11 +95,24 @@ router.get('/user/username', (req, res) => {
 		User.findById(req.user.id, (err, found) => {
 			if (err) error(res, 500, err);
 
-			if (found) {
-				res.status(200).json({ username: found.username });
-			} else res.status(401).json({ error: 'Unable to found user.' });
+			if (found) res.status(200).json({ username: found.username });
+			else res.status(401).json({ error: 'Unable to found user.' });
 		});
 	} else res.status(401).json({ error: 'Unable to find user.' });
+});
+
+router.post('/feedback', (req, res) => {
+	if (req.body.length <= 2) return error(res, 400, 'Missed parameters.');
+
+	new Feedback({
+		name: { first: req.body.firstName, last: req.body.lastName },
+		range: req.body.range,
+		comments: req.body.comments,
+	}).save((err) => {
+		if (err) return error(res, 500, err);
+
+		res.status(200).json({ success: true });
+	});
 });
 
 module.exports = router;
