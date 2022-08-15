@@ -62,8 +62,6 @@ function App() {
 
 					if (res.status === 200) {
 						if (res.data.success) {
-							console.log(res.data);
-
 							const user = res.data.user;
 							user.id = user._id;
 							delete user._id;

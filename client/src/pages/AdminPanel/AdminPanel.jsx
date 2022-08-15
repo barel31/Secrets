@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Context from '../../Context';
-import { Spinner, Form, Button, FloatingLabel, Stack, InputGroup } from 'react-bootstrap';
+import { Form, Button, FloatingLabel, Stack, InputGroup } from 'react-bootstrap';
 import axios from 'axios';
 import date from 'date-and-time';
 import { toast } from 'react-toastify';
@@ -34,7 +34,7 @@ export default function AdminPanel() {
 
 	const fetchData = (deleteId = 0) => {
 		setData((prev) => ({ ...prev, fetching: true, fetchDelete: deleteId }));
-		
+
 		const password = data.password;
 		const toastId = toast.loading(deleteId ? 'Deleting feedback...' : 'Loading...');
 		const axiosMethod = deleteId ? axios.delete : axios.post;
@@ -114,10 +114,7 @@ export default function AdminPanel() {
 							</InputGroup.Text>
 							<Form.Control as="textarea" minrows="1" value={feedback.comments} disabled />
 							{data.fetchDelete === feedback._id ? (
-								<Button variant="danger" disabled>
-									<Spinner as="span" animation="border" size="lg" role="status" aria-hidden="true" />
-									<span className="visually-hidden">Loading...</span>
-								</Button>
+								<ButtonLoader variant="danger" size="lg" />
 							) : (
 								<Button variant="danger" size="sm" onClick={() => handleFeedbackDelete(feedback._id)}>
 									Delete

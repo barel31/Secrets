@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Context from '../Context';
-import { Button, Form, InputGroup, Spinner } from 'react-bootstrap';
+import { Button, Form, InputGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import date from 'date-and-time';
 
@@ -13,6 +13,7 @@ import { ImCancelCircle } from 'react-icons/im';
 
 export default function Submit() {
 	//TODO - Make component for each secret render to achieve less lines per file
+	//TODO - Make it easier to see secret text on mobile devices
 	const nav = useNavigate();
 
 	const [fetchState, setFetchState] = useState(-1);
@@ -230,9 +231,7 @@ export default function Submit() {
 				/>
 
 				{fetchState === -2 ? (
-					<Button variant="dark" disabled>
-						<Spinner as="span" animation="border" size="sm" aria-hidden="true" />
-					</Button>
+					<ButtonLoader variant="dark m-3" size="sm" />
 				) : (
 					<Button type="submit" variant="dark m-3">
 						Submit
