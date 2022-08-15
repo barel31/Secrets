@@ -33,7 +33,7 @@ router
 		});
 	})
 	.delete((req, res) => {
-		if (!req?.user?.id) return error(res, 401, 'User unauthorized.');
+		if (!req.user?.id) return error(res, 401, 'User unauthorized.');
 
 		const { secretIndex } = req.body;
 

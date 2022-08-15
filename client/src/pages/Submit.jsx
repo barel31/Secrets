@@ -9,7 +9,7 @@ import date from 'date-and-time';
 import ButtonLoader from '../components/ButtonLoader';
 import { FaTrash } from 'react-icons/fa';
 import { BsPencilFill, BsCheckLg } from 'react-icons/bs';
-import { MdOutlineCancel } from 'react-icons/md';
+import { ImCancelCircle } from 'react-icons/im';
 
 export default function Submit() {
 	//TODO - Make component for each secret render to achieve less lines per file
@@ -64,7 +64,7 @@ export default function Submit() {
 	const saveSecretText = (secretIndex) => {
 		setFetchState(secretIndex);
 		const toastId = toast.loading('Editing secret...');
-		console.log({ editState });
+
 		axios
 			.patch(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex, secretText: editState.text })
 			.then((res) => {
@@ -80,9 +80,9 @@ export default function Submit() {
 				}
 			})
 			.catch((err) => {
-				toastUpdate(toastId, 'error', 'ERROR: Cannot edit secret.');
 				setFetchState(-1);
 				setEditState(() => ({ index: -1, text: '' }));
+				toastUpdate(toastId, 'error', 'ERROR: Cannot edit secret.');
 				console.log(err);
 			});
 	};
@@ -206,7 +206,7 @@ export default function Submit() {
 										}>
 										{/* <i class="bi bi-trash" /> */}
 										{editState.index === i ? (
-											<MdOutlineCancel className="react-icons" />
+											<ImCancelCircle className="react-icons" />
 										) : (
 											<FaTrash className="react-icons" />
 										)}
