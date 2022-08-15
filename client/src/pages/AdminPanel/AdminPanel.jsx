@@ -34,8 +34,8 @@ export default function AdminPanel() {
 
 	const fetchData = (deleteId = 0) => {
 		setData((prev) => ({ ...prev, fetching: true, fetchDelete: deleteId }));
+		
 		const password = data.password;
-
 		const toastId = toast.loading(deleteId ? 'Deleting feedback...' : 'Loading...');
 		const axiosMethod = deleteId ? axios.delete : axios.post;
 

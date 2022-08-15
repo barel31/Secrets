@@ -7,11 +7,17 @@ import { toast } from 'react-toastify';
 import date from 'date-and-time';
 
 import ButtonLoader from '../components/ButtonLoader';
+import { FaTrash } from 'react-icons/fa';
+import { BsPencilFill, BsCheckLg } from 'react-icons/bs';
+import { MdOutlineCancel } from 'react-icons/md';
 
 export default function Submit() {
+	//TODO - Make component for each secret render to achieve less lines per file
 	const nav = useNavigate();
 
-	const [fetchState, setFetchState] = useState({ switch: -1, button: -1 });
+	const [fetchState, setFetchState] = useState(-1);
+
+	const [editState, setEditState] = useState({ index: -1, text: '' });
 
 	const { user, fetched, fetchData, toastUpdate } = useContext(Context);
 
@@ -26,37 +32,69 @@ export default function Submit() {
 	const deleteSecret = (secretIndex) => {
 		if (!window.confirm('Are you sure you want delete your secret?')) return;
 
-		setFetchState((prev) => ({ ...prev, button: secretIndex }));
+		setFetchState(secretIndex);
 		const toastId = toast.loading('Deleting secret...');
 
 		axios
 			.delete(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex })
 			.then((res) => {
-				setFetchState({ switch: -1, button: -1 });
+				setFetchState(-1);
 
 				if (res.status === 200) {
 					toastUpdate(toastId, 'success', 'Secret deleted successfully!');
 					user.secrets.splice(secretIndex, 1);
 				} else {
 					toastUpdate(toastId, 'error', 'ERROR: Cannot delete secret.');
-					throw new Error('Cannot delete secret.');
+					// throw new Error('Cannot delete secret.');
 				}
 			})
 			.catch((err) => {
-				setFetchState({ switch: -1, button: -1 });
+				setFetchState(-1);
 				toastUpdate(toastId, 'error', err);
 				console.log(err);
 			});
 	};
 
+	const editSecret = (secretIndex) => {
+		const secretText = user.secrets[secretIndex].secret;
+		setEditState(() => ({ index: secretIndex, text: secretText }));
+		document.getElementById(`secret-list-${secretIndex}`).value = secretText;
+	};
+
+	const saveSecretText = (secretIndex) => {
+		setFetchState(secretIndex);
+		const toastId = toast.loading('Editing secret...');
+		console.log({ editState });
+		axios
+			.patch(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex, secretText: editState.text })
+			.then((res) => {
+				setFetchState(-1);
+				setEditState(() => ({ index: -1, text: '' }));
+
+				if (res.status === 200) {
+					toastUpdate(toastId, 'success', 'Secret updated successfully!');
+					user.secrets[secretIndex].secret = editState.text;
+				} else {
+					toastUpdate(toastId, 'error', 'ERROR: Cannot edit secret.');
+					throw new Error('Cannot edit secret.');
+				}
+			})
+			.catch((err) => {
+				toastUpdate(toastId, 'error', 'ERROR: Cannot edit secret.');
+				setFetchState(-1);
+				setEditState(() => ({ index: -1, text: '' }));
+				console.log(err);
+			});
+	};
+
 	const changeSecretState = (secretIndex, isPrivate) => {
-		setFetchState((prev) => ({ ...prev, switch: secretIndex }));
+		setFetchState(secretIndex);
 		const toastId = toast.loading('Updating secret...');
 
 		axios
 			.patch(`${process.env.REACT_APP_WEB_URL}/api/user/secrets`, { secretIndex, isPrivate })
 			.then((res) => {
-				setFetchState({ switch: -1, button: -1 });
+				setFetchState(-1);
 
 				if (res.status === 200) {
 					toastUpdate(toastId, 'success', 'Secret state updated successfully!');
@@ -67,8 +105,8 @@ export default function Submit() {
 				}
 			})
 			.catch((err) => {
-				setFetchState({ switch: -1, button: -1 });
 				toastUpdate(toastId, 'error', 'ERROR: Cannot change secret state.');
+				setFetchState(-1);
 				console.log(err);
 			});
 	};
@@ -76,7 +114,7 @@ export default function Submit() {
 	const submitSecret = (e) => {
 		e.preventDefault();
 
-		setFetchState((prev) => ({ ...prev, button: -2 }));
+		setFetchState(-2);
 		const toastId = toast.loading('Submiting...');
 
 		axios
@@ -85,7 +123,7 @@ export default function Submit() {
 				isPrivate: false,
 			})
 			.then((res) => {
-				setFetchState({ switch: -1, button: -1 });
+				setFetchState(-1);
 
 				if (res.status === 200) {
 					fetchData();
@@ -99,7 +137,7 @@ export default function Submit() {
 				}
 			})
 			.catch((err) => {
-				setFetchState({ switch: -1, button: -1 });
+				setFetchState(-1);
 				toastUpdate(toastId, 'error', 'ERROR: Cannot add secret.');
 				console.log(err);
 			});
@@ -114,31 +152,66 @@ export default function Submit() {
 					user.secrets?.map((secret, i) => (
 						<InputGroup key={i} className="mb-3">
 							<InputGroup.Text>{date.format(new Date(secret.date), 'DD/M/YY HH:mm')}</InputGroup.Text>
+
 							<Form.Control
 								placeholder={secret.secret}
 								aria-label={secret.secret}
 								aria-describedby={secret.secret}
-								disabled
+								disabled={editState.index !== i}
+								id={`secret-list-${i}`}
+								onChange={(e) => setEditState((prev) => ({ ...prev, text: e.target.value }))}
 							/>
-							<InputGroup.Text>
-								{fetchState.switch === i ? (
-									<Form.Switch type="switch" checked={!secret.isPrivate} disabled />
-								) : (
-									<Form.Switch
-										type="switch"
-										size={'sm'}
-										checked={!secret.isPrivate}
-										onChange={(e) => changeSecretState(i, !e.target.checked)}
-									/>
-								)}
-							</InputGroup.Text>
 
-							{fetchState.button === i ? (
-								<ButtonLoader variant="danger" size="sm" />
+							{fetchState === i ? (
+								<>
+									<InputGroup.Text>
+										<Form.Switch type="switch" checked={!secret.isPrivate} disabled />
+									</InputGroup.Text>
+									<ButtonLoader variant="danger" size="sm" />
+								</>
 							) : (
-								<Button variant="btn btn-danger" onClick={() => deleteSecret(i)}>
-									Delete
-								</Button>
+								<>
+									{editState.index !== i && (
+										<InputGroup.Text>
+											<Form.Switch
+												type="switch"
+												size={'sm'}
+												checked={!secret.isPrivate}
+												onChange={(e) => changeSecretState(i, !e.target.checked)}
+											/>
+										</InputGroup.Text>
+									)}
+
+									<Button
+										variant={editState.index === i ? 'primary' : 'warning'}
+										className="react-icons-wrapper"
+										onClick={(e) =>
+											editState.index === i ? saveSecretText(i) : editSecret(i)
+										}>
+										{/* <FaPencilAlt /> */}
+										{editState.index === i ? (
+											<BsCheckLg className="react-icons" />
+										) : (
+											<BsPencilFill className="react-icons" />
+										)}
+									</Button>
+
+									<Button
+										variant="danger"
+										className="react-icons-wrapper"
+										onClick={(e) =>
+											editState.index === i
+												? setEditState(() => ({ index: -1, text: '' }))
+												: deleteSecret(i)
+										}>
+										{/* <i class="bi bi-trash" /> */}
+										{editState.index === i ? (
+											<MdOutlineCancel className="react-icons" />
+										) : (
+											<FaTrash className="react-icons" />
+										)}
+									</Button>
+								</>
 							)}
 						</InputGroup>
 					))
@@ -158,7 +231,7 @@ export default function Submit() {
 					required
 				/>
 
-				{fetchState.button === -2 ? (
+				{fetchState === -2 ? (
 					<Button variant="dark" disabled>
 						<Spinner as="span" animation="border" size="sm" aria-hidden="true" />
 					</Button>

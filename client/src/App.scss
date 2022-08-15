@@ -45,3 +45,15 @@
 		margin-top: auto;
 	}
 }
+
+.react-icons-wrapper {
+	.react-icons {
+		fill: white;
+	}
+
+	&:hover {
+		.react-icons {
+			fill: black;
+		}
+	}
+}
