@@ -58,7 +58,10 @@ export default function Submit() {
 	const editSecret = (secretIndex) => {
 		const secretText = user.secrets[secretIndex].secret;
 		setEditState(() => ({ index: secretIndex, text: secretText }));
-		document.getElementById(`secret-list-${secretIndex}`).value = secretText;
+
+		const editedElement = document.getElementById(`secret-list-${secretIndex}`);
+		editedElement.value = secretText;
+		setTimeout(() => editedElement.focus(), 0);
 	};
 
 	const saveEditedSecret = () => {
@@ -89,9 +92,8 @@ export default function Submit() {
 	};
 
 	const cancelEditSecret = () => {
-		const secretIndex = editState.index;
+		document.getElementById(`secret-list-${editState.index}`).value = '';
 		setEditState(() => ({ index: -1, text: '' }));
-		document.getElementById(`secret-list-${secretIndex}`).value = '';
 	};
 
 	const changeSecretState = (secretIndex, isPrivate) => {
@@ -166,7 +168,12 @@ export default function Submit() {
 								onChange={(e) =>
 									editState.index === i && setEditState((prev) => ({ ...prev, text: e.target.value }))
 								}
-								onKeyDown={(e) => editState.index === i && e.key === 'Enter' && saveEditedSecret()}
+								onKeyDown={(e) => {
+									if (editState.index === i) {
+										if (e.key === 'Enter') saveEditedSecret();
+										else if (e.key === 'Escape') cancelEditSecret();
+									}
+								}}
 							/>
 
 							{editState.index !== i && (
