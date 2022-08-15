@@ -59,8 +59,8 @@ router
 			if (err) return error(res, 500, error);
 
 			if (secretIndex >= found.secrets.length) return error(res, 400, 'Invalid secret index.');
-
-			if (isPrivate) found.secrets[secretIndex].isPrivate = isPrivate;
+			
+			if (isPrivate !== undefined) found.secrets[secretIndex].isPrivate = isPrivate;
 			else if (secretText) found.secrets[secretIndex].secret = secretText;
 
 			found.save((err) => {

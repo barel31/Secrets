@@ -61,8 +61,8 @@ export default function Submit() {
 		document.getElementById(`secret-list-${secretIndex}`).value = secretText;
 	};
 
-	const saveSecretText = () => {
-		const secretIndex = editSecret.index;
+	const saveEditedSecret = () => {
+		const secretIndex = editState.index;
 		setFetchState(secretIndex);
 		const toastId = toast.loading('Editing secret...');
 
@@ -92,8 +92,8 @@ export default function Submit() {
 		const secretIndex = editState.index;
 		setEditState(() => ({ index: -1, text: '' }));
 		document.getElementById(`secret-list-${secretIndex}`).value = '';
-	}
-	
+	};
+
 	const changeSecretState = (secretIndex, isPrivate) => {
 		setFetchState(secretIndex);
 		const toastId = toast.loading('Updating secret...');
@@ -120,7 +120,6 @@ export default function Submit() {
 
 	const submitSecret = (e) => {
 		e.preventDefault();
-
 		setFetchState(-2);
 		const toastId = toast.loading('Submiting...');
 
@@ -135,11 +134,9 @@ export default function Submit() {
 				if (res.status === 200) {
 					fetchData();
 					toastUpdate(toastId, 'success', `Successfully created new secret: ${e.target.secret.value}`);
-					console.log(res.data);
 					e.target.secret.value = '';
 				} else {
 					toastUpdate(toastId, 'error', 'ERROR: Cannot add secret.');
-
 					throw new Error('Cannot add secret.');
 				}
 			})
@@ -166,66 +163,53 @@ export default function Submit() {
 								aria-describedby={secret.secret}
 								disabled={editState.index !== i}
 								id={`secret-list-${i}`}
-								onChange={(e) => setEditState((prev) => ({ ...prev, text: e.target.value }))}
+								onChange={(e) =>
+									editState.index === i && setEditState((prev) => ({ ...prev, text: e.target.value }))
+								}
+								onKeyDown={(e) => editState.index === i && e.key === 'Enter' && saveEditedSecret()}
 							/>
 
-							{fetchState === i ? (
-								<>
-									<InputGroup.Text>
-										<Form.Switch type="switch" checked={!secret.isPrivate} disabled />
-									</InputGroup.Text>
-									<ButtonLoader variant="danger" size="sm" />
-								</>
-							) : (
-								<>
-									{editState.index !== i && (
-										<InputGroup.Text>
-											<Form.Switch
-												type="switch"
-												size={'sm'}
-												checked={!secret.isPrivate}
-												onChange={(e) => changeSecretState(i, !e.target.checked)}
-											/>
-										</InputGroup.Text>
-									)}
-
-									<Button
-										variant={editState.index === i ? 'primary' : 'warning'}
-										className="react-icons-wrapper"
-										onClick={() =>
-											editState.index === i ? saveSecretText() : editSecret(i)
-										}>
-										{/* <FaPencilAlt /> */}
-										{editState.index === i ? (
-											<BsCheckLg className="react-icons" />
-										) : (
-											<BsPencilFill className="react-icons" />
-										)}
-									</Button>
-
-									<Button
-										variant="danger"
-										className="react-icons-wrapper"
-										onClick={() =>
-											editState.index === i
-												? cancelEditSecret()
-												: deleteSecret(i)
-										}>
-										{/* <i class="bi bi-trash" /> */}
-										{editState.index === i ? (
-											<ImCancelCircle className="react-icons" />
-										) : (
-											<FaTrash className="react-icons" />
-										)}
-									</Button>
-								</>
+							{editState.index !== i && (
+								<InputGroup.Text>
+									<Form.Switch
+										type="switch"
+										size="sm"
+										checked={!secret.isPrivate}
+										disabled={fetchState === i}
+										onChange={(e) => changeSecretState(i, !e.target.checked)}
+									/>
+								</InputGroup.Text>
 							)}
+
+							<Button
+								variant={editState.index === i ? 'primary' : 'warning'}
+								className="react-icons-wrapper"
+								disabled={fetchState === i}
+								onClick={() => (editState.index === i ? saveEditedSecret() : editSecret(i))}>
+								{editState.index === i ? (
+									<BsCheckLg className="react-icons" />
+								) : (
+									<BsPencilFill className="react-icons" />
+								)}
+							</Button>
+
+							<Button
+								variant="danger"
+								className="react-icons-wrapper"
+								disabled={fetchState === i}
+								onClick={() => (editState.index === i ? cancelEditSecret() : deleteSecret(i))}>
+								{editState.index === i ? (
+									<ImCancelCircle className="react-icons" />
+								) : (
+									<FaTrash className="react-icons" />
+								)}
+							</Button>
 						</InputGroup>
 					))
 				) : user?.id ? (
 					<p className="secret-text">You didn't submit any secret yet.</p>
 				) : (
-					<ButtonLoader variant="dark" size="lg" />
+					<ButtonLoader variant="dark m-3" size="lg" />
 				)}
 			</div>
 
