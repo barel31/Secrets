@@ -61,7 +61,8 @@ export default function Submit() {
 		document.getElementById(`secret-list-${secretIndex}`).value = secretText;
 	};
 
-	const saveSecretText = (secretIndex) => {
+	const saveSecretText = () => {
+		const secretIndex = editSecret.index;
 		setFetchState(secretIndex);
 		const toastId = toast.loading('Editing secret...');
 
@@ -87,6 +88,12 @@ export default function Submit() {
 			});
 	};
 
+	const cancelEditSecret = () => {
+		const secretIndex = editState.index;
+		setEditState(() => ({ index: -1, text: '' }));
+		document.getElementById(`secret-list-${secretIndex}`).value = '';
+	}
+	
 	const changeSecretState = (secretIndex, isPrivate) => {
 		setFetchState(secretIndex);
 		const toastId = toast.loading('Updating secret...');
@@ -185,8 +192,8 @@ export default function Submit() {
 									<Button
 										variant={editState.index === i ? 'primary' : 'warning'}
 										className="react-icons-wrapper"
-										onClick={(e) =>
-											editState.index === i ? saveSecretText(i) : editSecret(i)
+										onClick={() =>
+											editState.index === i ? saveSecretText() : editSecret(i)
 										}>
 										{/* <FaPencilAlt /> */}
 										{editState.index === i ? (
@@ -199,9 +206,9 @@ export default function Submit() {
 									<Button
 										variant="danger"
 										className="react-icons-wrapper"
-										onClick={(e) =>
+										onClick={() =>
 											editState.index === i
-												? setEditState(() => ({ index: -1, text: '' }))
+												? cancelEditSecret()
 												: deleteSecret(i)
 										}>
 										{/* <i class="bi bi-trash" /> */}
