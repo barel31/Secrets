@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import Context from '../Context';
+import Context from '../../Context';
 import { Container, Nav, Navbar, Spinner } from 'react-bootstrap';
+
+import './NavBar.scss';
 
 export default function NavBar() {
 	const { user } = useContext(Context);

@@ -3,8 +3,8 @@
 .App {
 	background-color: #e8ecef;
 
-	.app-container {
-		.app-inner-container {
+	.container {
+		.inner-container {
 			min-height: calc(100vh - 120px);
 			padding-bottom: 2rem;
 			padding-top: 10em;
@@ -26,24 +26,6 @@
 .span-secret {
 	display: flex;
 	justify-content: space-between;
-}
-
-.Navbar {
-	.nav-link-logout {
-		display: inline;
-
-		@media screen and (max-width: 992px) {
-			display: block;
-		}
-	}
-}
-
-.Footer {
-	footer {
-		text-align: center;
-		margin: 0;
-		margin-top: auto;
-	}
 }
 
 .react-icons-wrapper {

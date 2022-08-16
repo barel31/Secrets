@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Context from '../Context';
+import Context from '../../Context';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import date from 'date-and-time';
 
-import ButtonLoader from '../components/ButtonLoader';
+import './Submit.scss';
+import ButtonLoader from '../../components/ButtonLoader';
 import { FaTrash } from 'react-icons/fa';
 import { BsPencilFill, BsCheckLg } from 'react-icons/bs';
 import { ImCancelCircle } from 'react-icons/im';
 
 export default function Submit() {
 	//TODO - Make component for each secret render to achieve less lines per file
-	//TODO - Make it easier to see secret text on mobile devices
 	const nav = useNavigate();
 
 	const [fetchState, setFetchState] = useState(-1);
@@ -157,14 +157,17 @@ export default function Submit() {
 			<div className="secret-list">
 				{user?.secrets?.length ? (
 					user.secrets?.map((secret, i) => (
-						<InputGroup key={i} className="mb-3">
-							<InputGroup.Text>{date.format(new Date(secret.date), 'DD/M/YY HH:mm')}</InputGroup.Text>
+						<InputGroup key={i} className="secret-list-item mb-3">
+							<InputGroup.Text className="secret-list-item-date">
+								{date.format(new Date(secret.date), 'DD/M/YY HH:mm')}
+							</InputGroup.Text>
 
 							<Form.Control
 								placeholder={secret.secret}
 								aria-label={secret.secret}
 								aria-describedby={secret.secret}
 								disabled={editState.index !== i}
+								className="secret-list-item-secret"
 								id={`secret-list-${i}`}
 								onChange={(e) =>
 									editState.index === i && setEditState((prev) => ({ ...prev, text: e.target.value }))
@@ -177,8 +180,8 @@ export default function Submit() {
 								}}
 							/>
 
-							{editState.index !== i && (
-								<InputGroup.Text>
+							<InputGroup.Text className="secret-list-item-actions">
+								{editState.index !== i && (
 									<Form.Switch
 										type="switch"
 										size="sm"
@@ -186,32 +189,34 @@ export default function Submit() {
 										disabled={fetchState === i}
 										onChange={(e) => changeSecretState(i, !e.target.checked)}
 									/>
-								</InputGroup.Text>
-							)}
-
-							<Button
-								variant={editState.index === i ? 'primary' : 'warning'}
-								className="react-icons-wrapper"
-								disabled={fetchState === i}
-								onClick={() => (editState.index === i ? saveEditedSecret() : editSecret(i))}>
-								{editState.index === i ? (
-									<BsCheckLg className="react-icons" />
-								) : (
-									<BsPencilFill className="react-icons" />
 								)}
-							</Button>
 
-							<Button
-								variant="danger"
-								className="react-icons-wrapper"
-								disabled={fetchState === i}
-								onClick={() => (editState.index === i ? cancelEditSecret() : deleteSecret(i))}>
-								{editState.index === i ? (
-									<ImCancelCircle className="react-icons" />
-								) : (
-									<FaTrash className="react-icons" />
-								)}
-							</Button>
+								<Button
+									title="Edit"
+									variant={editState.index === i ? 'primary' : 'warning'}
+									className="react-icons-wrapper"
+									disabled={fetchState === i}
+									onClick={() => (editState.index === i ? saveEditedSecret() : editSecret(i))}>
+									{editState.index === i ? (
+										<BsCheckLg className="react-icons" />
+									) : (
+										<BsPencilFill className="react-icons" />
+									)}
+								</Button>
+
+								<Button
+									title="Delete"
+									variant="danger"
+									className="react-icons-wrapper"
+									disabled={fetchState === i}
+									onClick={() => (editState.index === i ? cancelEditSecret() : deleteSecret(i))}>
+									{editState.index === i ? (
+										<ImCancelCircle className="react-icons" />
+									) : (
+										<FaTrash className="react-icons" />
+									)}
+								</Button>
+							</InputGroup.Text>
 						</InputGroup>
 					))
 				) : user?.id ? (

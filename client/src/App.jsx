@@ -9,11 +9,11 @@ import Login from './pages/Auth/Login';
 import Logout from './pages/Auth/Logout';
 import Register from './pages/Auth/Register';
 import Secrets from './pages/Secrets';
-import Submit from './pages/Submit';
+import Submit from './pages/Submit/Submit';
 import CallBack from './pages/CallBack';
 import NotFoundPage from './pages/NotFoundPage';
-import NavBar from './pages/NavBar';
-import Footer from './pages/Footer';
+import NavBar from './pages/NavBar/NavBar';
+import Footer from './pages/Footer/Footer';
 import Feedback from './pages/Feedback/Feedback';
 import AdminPanel from './pages/AdminPanel/AdminPanel';
 
@@ -105,27 +105,25 @@ function App() {
 		<div className="App">
 			<Context.Provider value={{ user, setUser, fetchData, secrets, fetched, logInOutHandler, toastUpdate }}>
 				<NavBar />
-				<div className="app-container">
-					<div className="app-inner-container">
+				<div className="container">
+					<div className="inner-container">
 						<div className="jumbotron text-center">
-							<div className="container">
-								<i className="fas fa-key fa-6x" />
-								<Routes>
-									<Route exact path="/" element={<HomePage />} />
-									<Route exact path="/register" element={<Register />} />
-									<Route exact path="/login" element={<Login />} />
-									<Route exact path="/logout" element={<Logout />} />
-									<Route exact path="/secrets" element={<Secrets />} />
-									<Route exact path="/submit" element={<Submit />} />
-									<Route exact path="/callback/google/success" element={<CallBack />} />
-									<Route exact path="/callback/facebook/success" element={<CallBack />} />
-									<Route exact path="/callback/login/failed" element={<CallBack />} />
-									<Route exact path="/feedback" element={<Feedback />} />
-									<Route exact path="/admin" element={<AdminPanel />} />
-									<Route path="/404" element={<NotFoundPage />} />
-									<Route path="*" element={<Navigate to="/404" replace />} />
-								</Routes>
-							</div>
+							<i className="fas fa-key fa-6x" />
+							<Routes>
+								<Route exact path="/" element={<HomePage />} />
+								<Route exact path="/register" element={<Register />} />
+								<Route exact path="/login" element={<Login />} />
+								<Route exact path="/logout" element={<Logout />} />
+								<Route exact path="/secrets" element={<Secrets />} />
+								<Route exact path="/submit" element={<Submit />} />
+								<Route exact path="/callback/google/success" element={<CallBack />} />
+								<Route exact path="/callback/facebook/success" element={<CallBack />} />
+								<Route exact path="/callback/login/failed" element={<CallBack />} />
+								<Route exact path="/feedback" element={<Feedback />} />
+								<Route exact path="/admin" element={<AdminPanel />} />
+								<Route path="/404" element={<NotFoundPage />} />
+								<Route path="*" element={<Navigate to="/404" replace />} />
+							</Routes>
 						</div>
 					</div>
 					<Footer />
