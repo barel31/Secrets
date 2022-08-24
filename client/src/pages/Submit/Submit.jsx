@@ -17,7 +17,6 @@ export default function Submit() {
 	const nav = useNavigate();
 
 	const [fetchState, setFetchState] = useState(-1);
-
 	const [editState, setEditState] = useState({ index: -1, text: '' });
 
 	const { user, fetched, fetchData, toastUpdate } = useContext(Context);

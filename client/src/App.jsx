@@ -13,9 +13,9 @@ import Submit from './pages/Submit/Submit';
 import CallBack from './pages/CallBack';
 import NotFoundPage from './pages/NotFoundPage';
 import NavBar from './pages/NavBar/NavBar';
-import Footer from './pages/Footer/Footer';
 import Feedback from './pages/Feedback/Feedback';
 import AdminPanel from './pages/AdminPanel/AdminPanel';
+import Footer from './components/Footer/Footer';
 
 import './App.scss';
 import './styles/bootstrap-social.css';
@@ -126,8 +126,8 @@ function App() {
 							</Routes>
 						</div>
 					</div>
-					<Footer />
 				</div>
+					<Footer />
 			</Context.Provider>
 			<ToastContainer position="bottom-right" newestOnTop pauseOnFocusLoss={false} limit={3} />
 		</div>
