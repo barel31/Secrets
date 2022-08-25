@@ -37,7 +37,7 @@ export default function Secrets() {
 			{secretFiltered ? (
 				secretFiltered.length ? (
 					secretFiltered.map((secret, i) => (
-						<p key={i} className="secret-text">
+						<p key={i} className="alert alert-dark display-6 font-italic font-weight-light">
 							{secret}
 						</p>
 					))
