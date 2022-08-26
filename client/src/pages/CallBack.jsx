@@ -9,15 +9,17 @@ export default function CallBack() {
 		const path = window.location.href;
 		const pathCutt = path.substring(path.indexOf('/callback/'));
 
-		if (pathCutt === '/callback/google/success') toast.success('Succesfully logged in with Google account.');
-		else if (pathCutt === '/callback/facebook/success')
+		if (pathCutt.includes('/callback/google/success')) {
+			toast.success('Succesfully logged in with Google account.');
+		} else if (pathCutt.includes('/callback/facebook/success')) {
 			toast.success('Succesfully logged in with Facebook account.');
+		}
 
-		if (pathCutt === '/callback/login/failed') {
+		if (pathCutt.includes('/callback/login/failed')) {
 			toast.error('Login was failed.');
 			nav('/login');
 		} else nav('/secrets');
-	// eslint-disable-next-line
+		// eslint-disable-next-line
 	}, []);
 
 	return <>redirect...</>;

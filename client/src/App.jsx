@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import Context from './Context';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -33,8 +33,6 @@ const toastUpdate = (id, type, str) =>
 const isLocal3001 = window.location.href.includes('localhost:3001');
 
 function App() {
-	const nav = useNavigate();
-
 	const [user, setUser] = useState();
 	const [fetched, setFetched] = useState(isLocal3001);
 	const [secrets, setSecrets] = useState();
@@ -82,28 +80,9 @@ function App() {
 			.catch((err) => console.log(err));
 	};
 
-	const logInOutHandler = () => {
-		if (user?.id) {
-			axios(`${process.env.REACT_APP_WEB_URL}/auth/logout`)
-				.then((res) => {
-					if (res.status === 200) {
-						if (res.data.success) {
-							fetchData();
-							nav('/');
-							toast.success('Logout successfully.');
-						} else toast.error('Cannot logout.');
-					} else {
-						toast.error('Error accured when trying to logout.');
-						throw new Error('Error accured when trying to logout.');
-					}
-				})
-				.catch((err) => console.log(err));
-		} else nav('/login');
-	};
-
 	return (
 		<div className="App">
-			<Context.Provider value={{ user, setUser, fetchData, secrets, fetched, logInOutHandler, toastUpdate }}>
+			<Context.Provider value={{ user, setUser, fetchData, secrets, fetched, toastUpdate }}>
 				<NavBar />
 				<div className="container">
 					<div className="inner-container">
