@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import Context from './Context';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
@@ -9,13 +9,13 @@ import Login from './pages/Auth/Login';
 import Logout from './pages/Auth/Logout';
 import Register from './pages/Auth/Register';
 import Secrets from './pages/Secrets';
-import Submit from './pages/Submit';
+import Submit from './pages/Submit/Submit';
 import CallBack from './pages/CallBack';
 import NotFoundPage from './pages/NotFoundPage';
-import NavBar from './pages/NavBar';
-import Footer from './pages/Footer';
+import NavBar from './pages/NavBar/NavBar';
 import Feedback from './pages/Feedback/Feedback';
 import AdminPanel from './pages/AdminPanel/AdminPanel';
+import Footer from './components/Footer/Footer';
 
 import './App.scss';
 import './styles/bootstrap-social.css';
@@ -33,8 +33,6 @@ const toastUpdate = (id, type, str) =>
 const isLocal3001 = window.location.href.includes('localhost:3001');
 
 function App() {
-	const nav = useNavigate();
-
 	const [user, setUser] = useState();
 	const [fetched, setFetched] = useState(isLocal3001);
 	const [secrets, setSecrets] = useState();
@@ -62,8 +60,6 @@ function App() {
 
 					if (res.status === 200) {
 						if (res.data.success) {
-							console.log(res.data);
-
 							const user = res.data.user;
 							user.id = user._id;
 							delete user._id;
@@ -84,54 +80,33 @@ function App() {
 			.catch((err) => console.log(err));
 	};
 
-	const logInOutHandler = () => {
-		if (user?.id) {
-			axios(`${process.env.REACT_APP_WEB_URL}/auth/logout`)
-				.then((res) => {
-					if (res.status === 200) {
-						if (res.data.success) {
-							fetchData();
-							nav('/');
-							toast.success('Logout successfully.');
-						} else toast.error('Cannot logout.');
-					} else {
-						toast.error('Error accured when trying to logout.');
-						throw new Error('Error accured when trying to logout.');
-					}
-				})
-				.catch((err) => console.log(err));
-		} else nav('/login');
-	};
-
 	return (
 		<div className="App">
-			<Context.Provider value={{ user, setUser, fetchData, secrets, fetched, logInOutHandler, toastUpdate }}>
+			<Context.Provider value={{ user, setUser, fetchData, secrets, fetched, toastUpdate }}>
 				<NavBar />
-				<div className="app-container">
-					<div className="app-inner-container">
+				<div className="container">
+					<div className="inner-container">
 						<div className="jumbotron text-center">
-							<div className="container">
-								<i className="fas fa-key fa-6x" />
-								<Routes>
-									<Route exact path="/" element={<HomePage />} />
-									<Route exact path="/register" element={<Register />} />
-									<Route exact path="/login" element={<Login />} />
-									<Route exact path="/logout" element={<Logout />} />
-									<Route exact path="/secrets" element={<Secrets />} />
-									<Route exact path="/submit" element={<Submit />} />
-									<Route exact path="/callback/google/success" element={<CallBack />} />
-									<Route exact path="/callback/facebook/success" element={<CallBack />} />
-									<Route exact path="/callback/login/failed" element={<CallBack />} />
-									<Route exact path="/feedback" element={<Feedback />} />
-									<Route exact path="/admin" element={<AdminPanel />} />
-									<Route path="/404" element={<NotFoundPage />} />
-									<Route path="*" element={<Navigate to="/404" replace />} />
-								</Routes>
-							</div>
+							<i className="fas fa-key fa-6x" />
+							<Routes>
+								<Route exact path="/" element={<HomePage />} />
+								<Route exact path="/register" element={<Register />} />
+								<Route exact path="/login" element={<Login />} />
+								<Route exact path="/logout" element={<Logout />} />
+								<Route exact path="/secrets" element={<Secrets />} />
+								<Route exact path="/submit" element={<Submit />} />
+								<Route exact path="/callback/google/success" element={<CallBack />} />
+								<Route exact path="/callback/facebook/success" element={<CallBack />} />
+								<Route exact path="/callback/login/failed" element={<CallBack />} />
+								<Route exact path="/feedback" element={<Feedback />} />
+								<Route exact path="/admin" element={<AdminPanel />} />
+								<Route path="/404" element={<NotFoundPage />} />
+								<Route path="*" element={<Navigate to="/404" replace />} />
+							</Routes>
 						</div>
 					</div>
-					<Footer />
 				</div>
+					<Footer />
 			</Context.Provider>
 			<ToastContainer position="bottom-right" newestOnTop pauseOnFocusLoss={false} limit={3} />
 		</div>

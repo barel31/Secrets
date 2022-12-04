@@ -33,7 +33,7 @@ router
 		});
 	})
 	.delete((req, res) => {
-		if (!req.user.id) return error(res, 401, 'User unauthorized.');
+		if (!req.user?.id) return error(res, 401, 'User unauthorized.');
 
 		const { secretIndex } = req.body;
 
@@ -51,16 +51,17 @@ router
 		});
 	})
 	.patch((req, res) => {
-		if (!req.user.id) return error(res, 401, 'User unauthorized.');
+		if (!req.user?.id) return error(res, 401, 'User unauthorized.');
 
-		const { secretIndex, isPrivate } = req.body;
+		const { secretIndex, isPrivate, secretText } = req.body;
 
 		User.findById(req.user.id, (err, found) => {
 			if (err) return error(res, 500, error);
 
 			if (secretIndex >= found.secrets.length) return error(res, 400, 'Invalid secret index.');
-
-			found.secrets[secretIndex].isPrivate = isPrivate;
+			
+			if (isPrivate !== undefined) found.secrets[secretIndex].isPrivate = isPrivate;
+			else if (secretText) found.secrets[secretIndex].secret = secretText;
 
 			found.save((err) => {
 				if (err) return error(res, 400, 'Unable to save user data.');

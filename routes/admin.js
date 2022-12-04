@@ -10,24 +10,30 @@ const error = (res, code, err) => {
 router
 	.route('/feedback')
 	.post((req, res) => {
-		if (req.body.data.password === process.env.ADMIN_PASSWORD) {
-			Feedback.find((err, found) => {
-				if (err) return error(res, 500, err);
+		if (!req.user) return error(res, 401, 'User not authenticated.');
 
-				res.status(200).json({ success: true, feedback: found });
-			});
-		} else res.status(401).json({ error: 'unauthorized' });
+		if (req.body.data.password !== process.env.ADMIN_PASSWORD && !req.user?.admin)
+			res.status(401).json({ error: 'Incorrect password.' });
+
+		req.user.admin = true;
+
+		Feedback.find((err, found) => {
+			if (err) return error(res, 500, err);
+
+			res.status(200).json({ success: true, feedback: found });
+		});
 	})
 	.delete((req, res) => {
-		if (req.body.password === process.env.ADMIN_PASSWORD) {
-			if (!req.body.deleteId) return error(res, 400, 'Invalid feedback id parameter.');
+		if (!req.user?.admin) return error(res, 401, 'User not authenticated.');
 
-			Feedback.deleteOne({ _id: req.body.deleteId }, (err) => {
-				if (err) return error(res, 500, err);
+		const { deleteId } = req.body;
+		if (!deleteId) return error(res, 400, 'Invalid feedback id parameter.');
 
-				res.status(200).json({ success: true });
+		Feedback.deleteOne({ _id: deleteId }, (err) => {
+			if (err) return error(res, 500, err);
 
-			});
-		} else res.status(401).json({ error: 'unauthorized' });
+			res.status(200).json({ success: true });
+		});
 	});
+
 module.exports = router;

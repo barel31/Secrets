@@ -16,7 +16,7 @@ router.get('/login/success', (req, res) => {
 			res.status(200).json({
 				success: true,
 				message: 'successfull',
-				user,
+				user: {...user._doc, admin: req.user.admin},
 				// cookies: req.cookies,
 			});
 		});

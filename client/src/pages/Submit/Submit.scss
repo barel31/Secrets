@@ -1,0 +1,32 @@
+.Submit {
+	.secret-list {
+		&-item {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+
+			&-actions {
+				gap: 0.25rem;
+			}
+
+			@media screen and (max-width: 767px) {
+				&-date {
+					border: none;
+
+					span {
+						display: block;
+					}
+				}
+
+				&-secret {
+					min-width: 80% !important;
+					text-align: center;
+				}
+
+				&-actions {
+					border: none;
+				}
+			}
+		}
+	}
+}

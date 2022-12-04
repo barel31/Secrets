@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import './Footer.scss';
+
 export default function Footer() {
 	return (
 		<div className="Footer">
@@ -11,7 +13,7 @@ export default function Footer() {
 						barel31
 					</a>
 					<br />
-					I would love to here from you: <Link to={'/feedback'}>Feedback</Link>
+					Submit your feedback: <Link to={'/feedback'}>Feedback</Link>
 				</p>
 			</footer>
 		</div>

@@ -19,8 +19,8 @@ export default function Login() {
 
 	useEffect(() => {
 		if (user?.id) {
-			toast.warning('You already logged in. rediect you to Secrets page.');
-			// nav('/secrets');
+			toast.warning('You already logged in. redirect you to Secrets page.');
+			nav('/secrets');
 		}
 		// eslint-disable-next-line
 	}, [user]);

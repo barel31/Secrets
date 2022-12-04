@@ -1,0 +1,9 @@
+.Navbar {
+	.nav-link-logout {
+		display: inline;
+
+		@media screen and (max-width: 990px) {
+			display: block;
+		}
+	}
+}

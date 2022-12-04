@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import Context from '../Context';
+import Context from '../../Context';
 import { Container, Nav, Navbar, Spinner } from 'react-bootstrap';
+
+import './NavBar.scss';
 
 export default function NavBar() {
 	const { user } = useContext(Context);
@@ -58,6 +60,11 @@ export default function NavBar() {
 						<Nav.Link as={Link} to="/feedback" className="nav-link" eventKey="7">
 							Feedback
 						</Nav.Link>
+						{user?.admin && (
+							<Nav.Link as={Link} to="/admin" className="nav-link" eventKey="8">
+								Admin
+							</Nav.Link>
+						)}
 					</Nav>
 				</Navbar.Collapse>
 			</Container>
